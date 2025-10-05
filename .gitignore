@@ -1,86 +1,372 @@
 # --- OS / Editors ---
-.DS_Store [web:44]
-Thumbs.db [web:44]
-.vscode/ [web:44]
-.idea/ [web:44]
-*.code-workspace [web:44]
+.DS_Store 
+Thumbs.db 
+.vscode/ 
+.idea/ 
+*.code-workspace 
 
 # --- .NET build outputs ---
-bin/ [web:44]
-obj/ [web:44]
-[Bb]uild/ [web:44]
-[Ll]og/ [web:44]
-[Ll]ogs/ [web:44]
+bin/ 
+obj/ 
+[Bb]uild/ 
+[Ll]og/ 
+[Ll]ogs/ 
 
 # --- Visual Studio / Rider / VS for Mac ---
-.vs/ [web:44]
-*.user [web:44]
-*.userosscache [web:44]
-*.suo [web:44]
-*.sln.docstates [web:44]
-*.psess [web:44]
-*.vsp* [web:44]
-_ReSharper*/ [web:44]
-*.DotSettings.user [web:44]
+.vs/ 
+*.user 
+*.userosscache 
+*.suo 
+*.sln.docstates 
+*.psess 
+*.vsp* 
+_ReSharper*/ 
+*.DotSettings.user 
 
 # --- NuGet ---
-*.nupkg [web:44]
-*.snupkg [web:44]
-packages/ [web:44]
-project.lock.json [web:44]
-project.fragment.lock.json [web:44]
+*.nupkg 
+*.snupkg 
+packages/ 
+project.lock.json 
+project.fragment.lock.json 
 
 # --- Azure/Publish profiles ---
-*.pubxml [web:44]
-*.pubxml.user [web:44]
+*.pubxml 
+*.pubxml.user 
 
 # --- Coverage / analysis ---
-TestResult*/ [web:44]
-*.coverage* [web:44]
-.coverage/ [web:44]
+TestResult*/ 
+*.coverage* 
+.coverage/ 
 
 # --- Local tooling / cache ---
-*.pidb [web:44]
-*.svclog [web:44]
-*.tlog [web:44]
-*.cache/ [web:44]
-*.opendb [web:44]
+*.pidb 
+*.svclog 
+*.tlog 
+*.cache/ 
+*.opendb 
 
 # --- Rider / JetBrains ---
-.idea/ [web:44]
-*.iml [web:44]
+.idea/ 
+*.iml 
 
 # --- Environment / secrets (custom) ---
-secrets/ [web:44]
-*.env [web:44]
-.env* [web:44]
-*.secret [web:44]
-*.key [web:44]
+secrets/ 
+*.env 
+.env* 
+*.secret 
+*.key 
 
 # --- Docker ---
-**/.dockerignore [web:44]
-.docker/ [web:44]
-docker-data/ [web:44]
-dbdata/ [web:44]
-.docker-compose/ [web:44]
+**/.dockerignore 
+.docker/ 
+docker-data/ 
+dbdata/ 
+.docker-compose/ 
 
 # Ignore local compose overrides and generated files
-docker-compose.override.yml [web:44]
+docker-compose.override.yml 
 
 # --- Swagger UI build artifacts (keep source spec, ignore generated) ---
-wwwroot/swagger/* [web:44]
-!wwwroot/swagger/ [web:44]
-!wwwroot/swagger/api-spec.yaml [web:44]
+wwwroot/swagger/* 
+!wwwroot/swagger/ 
+!wwwroot/swagger/api-spec.yaml 
 
 # --- User-specific settings / misc ---
-*.local.json [web:44]
-*.Development.local.json [web:44]
-*.orig [web:44]
-*.tmp [web:44]
-*.bak [web:44]
-~$* [web:44]
+*.local.json 
+*.Development.local.json 
+*.orig 
+*.tmp 
+*.bak 
+~$* 
 
 # --- Optional: keep repo clean on Windows / Linux ---
-$RECYCLE.BIN/ [web:44]
-*.swp [web:44]
-*.swo [web:44]
+$RECYCLE.BIN/ 
+*.swp 
+*.swo 
+bin/Debug/net9.0/appsettings.Development.json
+bin/Debug/net9.0/appsettings.json
+bin/Debug/net9.0/Azure.Core.dll
+bin/Debug/net9.0/Azure.Identity.dll
+bin/Debug/net9.0/dotnet-aspnet-codegenerator-design.dll
+bin/Debug/net9.0/EFCore.NamingConventions.dll
+bin/Debug/net9.0/Humanizer.dll
+bin/Debug/net9.0/Microsoft.AspNetCore.OpenApi.dll
+bin/Debug/net9.0/Microsoft.AspNetCore.Razor.Language.dll
+bin/Debug/net9.0/Microsoft.Bcl.AsyncInterfaces.dll
+bin/Debug/net9.0/Microsoft.Build.dll
+bin/Debug/net9.0/Microsoft.Build.Framework.dll
+bin/Debug/net9.0/Microsoft.Build.Locator.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.AnalyzerUtilities.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.CSharp.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.CSharp.Features.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.Elfie.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.Features.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.Razor.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.Scripting.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.Workspaces.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll
+bin/Debug/net9.0/Microsoft.CodeAnalysis.Workspaces.MSBuild.dll
+bin/Debug/net9.0/Microsoft.Data.SqlClient.dll
+bin/Debug/net9.0/Microsoft.DiaSymReader.dll
+bin/Debug/net9.0/Microsoft.DotNet.Scaffolding.Shared.dll
+bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Design.dll
+bin/Debug/net9.0/Microsoft.EntityFrameworkCore.dll
+bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Relational.dll
+bin/Debug/net9.0/Microsoft.EntityFrameworkCore.SqlServer.dll
+bin/Debug/net9.0/Microsoft.Extensions.Caching.Abstractions.dll
+bin/Debug/net9.0/Microsoft.Extensions.Caching.Memory.dll
+bin/Debug/net9.0/Microsoft.Extensions.Configuration.Abstractions.dll
+bin/Debug/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+bin/Debug/net9.0/Microsoft.Extensions.DependencyInjection.dll
+bin/Debug/net9.0/Microsoft.Extensions.DependencyModel.dll
+bin/Debug/net9.0/Microsoft.Extensions.Logging.Abstractions.dll
+bin/Debug/net9.0/Microsoft.Extensions.Logging.dll
+bin/Debug/net9.0/Microsoft.Extensions.Options.dll
+bin/Debug/net9.0/Microsoft.Extensions.Primitives.dll
+bin/Debug/net9.0/Microsoft.Identity.Client.dll
+bin/Debug/net9.0/Microsoft.Identity.Client.Extensions.Msal.dll
+bin/Debug/net9.0/Microsoft.IdentityModel.Abstractions.dll
+bin/Debug/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll
+bin/Debug/net9.0/Microsoft.IdentityModel.Logging.dll
+bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll
+bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
+bin/Debug/net9.0/Microsoft.NET.StringTools.dll
+bin/Debug/net9.0/Microsoft.OpenApi.dll
+bin/Debug/net9.0/Microsoft.SqlServer.Server.dll
+bin/Debug/net9.0/Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
+bin/Debug/net9.0/Microsoft.VisualStudio.Web.CodeGeneration.dll
+bin/Debug/net9.0/Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll
+bin/Debug/net9.0/Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
+bin/Debug/net9.0/Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
+bin/Debug/net9.0/Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
+bin/Debug/net9.0/Mono.TextTemplating.dll
+bin/Debug/net9.0/Newtonsoft.Json.dll
+bin/Debug/net9.0/Npgsql.dll
+bin/Debug/net9.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+bin/Debug/net9.0/NuGet.Common.dll
+bin/Debug/net9.0/NuGet.Configuration.dll
+bin/Debug/net9.0/NuGet.DependencyResolver.Core.dll
+bin/Debug/net9.0/NuGet.Frameworks.dll
+bin/Debug/net9.0/NuGet.LibraryModel.dll
+bin/Debug/net9.0/NuGet.Packaging.dll
+bin/Debug/net9.0/NuGet.ProjectModel.dll
+bin/Debug/net9.0/NuGet.Protocol.dll
+bin/Debug/net9.0/NuGet.Versioning.dll
+bin/Debug/net9.0/Saitynai
+bin/Debug/net9.0/Saitynai.deps.json
+bin/Debug/net9.0/Saitynai.dll
+bin/Debug/net9.0/Saitynai.pdb
+bin/Debug/net9.0/Saitynai.runtimeconfig.json
+bin/Debug/net9.0/Saitynai.staticwebassets.endpoints.json
+bin/Debug/net9.0/Swashbuckle.AspNetCore.Annotations.dll
+bin/Debug/net9.0/Swashbuckle.AspNetCore.Swagger.dll
+bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+bin/Debug/net9.0/System.ClientModel.dll
+bin/Debug/net9.0/System.CodeDom.dll
+bin/Debug/net9.0/System.Composition.AttributedModel.dll
+bin/Debug/net9.0/System.Composition.Convention.dll
+bin/Debug/net9.0/System.Composition.Hosting.dll
+bin/Debug/net9.0/System.Composition.Runtime.dll
+bin/Debug/net9.0/System.Composition.TypedParts.dll
+bin/Debug/net9.0/System.Configuration.ConfigurationManager.dll
+bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll
+bin/Debug/net9.0/System.Memory.Data.dll
+bin/Debug/net9.0/System.Reflection.MetadataLoadContext.dll
+bin/Debug/net9.0/System.Runtime.Caching.dll
+bin/Debug/net9.0/System.Security.Cryptography.ProtectedData.dll
+bin/Debug/net9.0/af/Humanizer.resources.dll
+bin/Debug/net9.0/ar/Humanizer.resources.dll
+bin/Debug/net9.0/az/Humanizer.resources.dll
+bin/Debug/net9.0/bg/Humanizer.resources.dll
+bin/Debug/net9.0/bn-BD/Humanizer.resources.dll
+bin/Debug/net9.0/cs/Humanizer.resources.dll
+bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/da/Humanizer.resources.dll
+bin/Debug/net9.0/de/Humanizer.resources.dll
+bin/Debug/net9.0/de/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/de/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/de/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/de/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/de/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/el/Humanizer.resources.dll
+bin/Debug/net9.0/es/Humanizer.resources.dll
+bin/Debug/net9.0/es/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/es/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/es/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/es/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/es/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/fa/Humanizer.resources.dll
+bin/Debug/net9.0/fi-FI/Humanizer.resources.dll
+bin/Debug/net9.0/fr/Humanizer.resources.dll
+bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/fr-BE/Humanizer.resources.dll
+bin/Debug/net9.0/he/Humanizer.resources.dll
+bin/Debug/net9.0/hr/Humanizer.resources.dll
+bin/Debug/net9.0/hu/Humanizer.resources.dll
+bin/Debug/net9.0/hy/Humanizer.resources.dll
+bin/Debug/net9.0/id/Humanizer.resources.dll
+bin/Debug/net9.0/is/Humanizer.resources.dll
+bin/Debug/net9.0/it/Humanizer.resources.dll
+bin/Debug/net9.0/it/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/it/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/it/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/it/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/it/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/ja/Humanizer.resources.dll
+bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/ko-KR/Humanizer.resources.dll
+bin/Debug/net9.0/ku/Humanizer.resources.dll
+bin/Debug/net9.0/lv/Humanizer.resources.dll
+bin/Debug/net9.0/ms-MY/Humanizer.resources.dll
+bin/Debug/net9.0/mt/Humanizer.resources.dll
+bin/Debug/net9.0/nb/Humanizer.resources.dll
+bin/Debug/net9.0/nb-NO/Humanizer.resources.dll
+bin/Debug/net9.0/nl/Humanizer.resources.dll
+bin/Debug/net9.0/pl/Humanizer.resources.dll
+bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/pt/Humanizer.resources.dll
+bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/ro/Humanizer.resources.dll
+bin/Debug/net9.0/ru/Humanizer.resources.dll
+bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/runtimes/unix/lib/net6.0/Microsoft.Data.SqlClient.dll
+bin/Debug/net9.0/runtimes/win/lib/net6.0/Microsoft.Data.SqlClient.dll
+bin/Debug/net9.0/runtimes/win/lib/net6.0/System.Runtime.Caching.dll
+bin/Debug/net9.0/runtimes/win-arm/native/Microsoft.Data.SqlClient.SNI.dll
+bin/Debug/net9.0/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll
+bin/Debug/net9.0/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
+bin/Debug/net9.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
+bin/Debug/net9.0/sk/Humanizer.resources.dll
+bin/Debug/net9.0/sl/Humanizer.resources.dll
+bin/Debug/net9.0/sr/Humanizer.resources.dll
+bin/Debug/net9.0/sr-Latn/Humanizer.resources.dll
+bin/Debug/net9.0/sv/Humanizer.resources.dll
+bin/Debug/net9.0/th-TH/Humanizer.resources.dll
+bin/Debug/net9.0/tr/Humanizer.resources.dll
+bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/uk/Humanizer.resources.dll
+bin/Debug/net9.0/uz-Cyrl-UZ/Humanizer.resources.dll
+bin/Debug/net9.0/uz-Latn-UZ/Humanizer.resources.dll
+bin/Debug/net9.0/vi/Humanizer.resources.dll
+bin/Debug/net9.0/zh-CN/Humanizer.resources.dll
+bin/Debug/net9.0/zh-Hans/Humanizer.resources.dll
+bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
+bin/Debug/net9.0/zh-Hant/Humanizer.resources.dll
+bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Features.resources.dll
+bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll
+bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Features.resources.dll
+bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll
+bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Scripting.resources.dll
+bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
+obj/project.assets.json
+obj/project.nuget.cache
+obj/Saitynai.csproj.codegeneration.targets
+obj/Saitynai.csproj.EntityFrameworkCore.targets
+obj/Saitynai.csproj.nuget.dgspec.json
+obj/Saitynai.csproj.nuget.g.props
+obj/Saitynai.csproj.nuget.g.targets
+obj/Debug/net9.0/.NETCoreApp,Version=v9.0.AssemblyAttributes.cs
+obj/Debug/net9.0/apphost
+obj/Debug/net9.0/project.razor.json
+obj/Debug/net9.0/Saitynai.AssemblyInfo.cs
+obj/Debug/net9.0/Saitynai.AssemblyInfoInputs.cache
+obj/Debug/net9.0/Saitynai.assets.cache
+obj/Debug/net9.0/Saitynai.csproj.AssemblyReference.cache
+obj/Debug/net9.0/Saitynai.csproj.CoreCompileInputs.cache
+obj/Debug/net9.0/Saitynai.csproj.FileListAbsolute.txt
+obj/Debug/net9.0/Saitynai.csproj.Up2Date
+obj/Debug/net9.0/Saitynai.dll
+obj/Debug/net9.0/Saitynai.GeneratedMSBuildEditorConfig.editorconfig
+obj/Debug/net9.0/Saitynai.genruntimeconfig.cache
+obj/Debug/net9.0/Saitynai.GlobalUsings.g.cs
+obj/Debug/net9.0/Saitynai.MvcApplicationPartsAssemblyInfo.cache
+obj/Debug/net9.0/Saitynai.MvcApplicationPartsAssemblyInfo.cs
+obj/Debug/net9.0/Saitynai.pdb
+obj/Debug/net9.0/staticwebassets.build.endpoints.json
+obj/Debug/net9.0/staticwebassets.build.json
+obj/Debug/net9.0/ref/Saitynai.dll
+obj/Debug/net9.0/refint/Saitynai.dll
+obj/Debug/net9.0/staticwebassets/msbuild.build.Saitynai.props
+obj/Debug/net9.0/staticwebassets/msbuild.buildMultiTargeting.Saitynai.props
+obj/Debug/net9.0/staticwebassets/msbuild.buildTransitive.Saitynai.props
