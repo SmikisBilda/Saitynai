@@ -1,0 +1,507 @@
+openapi: 3.1.0
+
+info:
+  title: Saitynai API (summaries only)
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: Building
+    description: Building endpoints
+  - name: Floor
+    description: Floor endpoints
+  - name: AccessPoints
+    description: Access point endpoints
+  - name: Scan
+    description: Scan endpoints
+  - name: Point
+    description: Point endpoints
+
+paths:
+
+  /api/AccessPoints:
+    get:
+      tags: [AccessPoints]
+      summary: List access points
+      description: Returns all access points.
+      responses:
+        '200':
+          description: OK — array of access points.
+      x-examples:
+        curl: |
+          curl -s http://localhost:8080/api/AccessPoints
+    post:
+      tags: [AccessPoints]
+      summary: Create access point
+      description: Creates a new access point; validates BSSID formatting.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: AccessPoint create payload (scanId, bssid, level required; other fields optional).
+              properties:
+                scanId:
+                  type: integer
+                  description: Related scan identifier
+                ssid:
+                  type: string
+                  nullable: true
+                bssid:
+                  type: string
+                  description: MAC address of the AP
+                capabilities:
+                  type: string
+                  nullable: true
+                centerfreq0:
+                  type: integer
+                  nullable: true
+                centerfreq1:
+                  type: integer
+                  nullable: true
+                frequency:
+                  type: integer
+                  nullable: true
+                level:
+                  type: integer
+                  description: RSSI level (fits 16-bit signed)
+              required: [scanId, bssid, level]
+            examples:
+              validColons:
+                summary: Valid BSSID with colons
+                value:
+                  scanId: 200
+                  bssid: "00:11:22:33:44:55"
+                  ssid: "OfficeWiFi"
+                  level: -55
+              validDashes:
+                summary: Valid BSSID with dashes
+                value:
+                  scanId: 200
+                  bssid: "00-11-22-33-44-55"
+                  ssid: "LabWiFi"
+                  level: -60
+              compact:
+                summary: Compact BSSID (no separators)
+                value:
+                  scanId: 200
+                  bssid: "001122334455"
+                  ssid: "GuestWiFi"
+                  level: -70
+              invalid:
+                summary: Invalid BSSID (too short)
+                value:
+                  scanId: 200
+                  bssid: "00112233"
+                  ssid: "BadWiFi"
+                  level: -80
+      responses:
+        '400':
+          description: One or more validation errors occurred.
+        '201':
+          description: Created — returns created access point.
+        '409':
+          description: Conflict — duplicate/unique key violation or invalid bssid (problem+json)
+        '422':
+          description: Unprocessable Entity — bssid validation problem.
+      x-examples:
+        curl: |
+          curl -X POST http://localhost:8080/api/AccessPoints \
+            -H "Content-Type: application/json" \
+            -d '{ "scanId": 200, "bssid": "00:11:22:33:44:55", "ssid":"OfficeWiFi","level":-55 }'
+
+  /api/AccessPoints/{id}:
+    get:
+      tags: [AccessPoints]
+      summary: Get access point
+      description: Returns a single access point by identifier.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Access point identifier
+          schema: { type: integer }
+          example: 123
+      responses:
+        '200':
+          description: OK — access point found.
+        '404':
+          description: Not Found — no access point with given id.
+      x-examples:
+        curl: |
+          curl -s http://localhost:8080/api/AccessPoints/123
+    delete:
+      tags: [AccessPoints]
+      summary: Delete access point
+      description: Deletes the specified access point.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Access point identifier
+          schema: { type: integer }
+          example: 123
+      responses:
+        '204':
+          description: No Content — deleted.
+        '404':
+          description: Not Found — no access point with given id.
+      x-examples:
+        curl: |
+          curl -X DELETE http://localhost:8080/api/AccessPoints/123
+
+  /api/Building:
+    get:
+      tags: [Building]
+      summary: List buildings
+      description: Returns all buildings.
+      responses:
+        '200':
+          description: OK — array of buildings.
+      x-examples:
+        curl: |
+          curl -s http://localhost:8080/api/Building
+    post:
+      tags: [Building]
+      summary: Create building
+      description: Creates a new building; handles unique constraint conflicts.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Building create payload.
+              properties:
+                name: { type: string }
+                address: { type: string }
+              required: [name, address]
+            examples:
+              minimal:
+                summary: Minimal building
+                value:
+                  name: "HQ"
+                  address: "Main St 1"
+              another:
+                summary: Another building
+                value:
+                  name: "Annex"
+                  address: "2nd Ave 10"
+      responses:
+        '400':
+          description: One or more validation errors occurred.
+        '201':
+          description: Created — returns created building.
+        '409':
+          description: Conflict — duplicate/unique key violation (problem+json).
+
+  /api/Building/{id}:
+    get:
+      tags: [Building]
+      summary: Get building
+      description: Returns a single building by identifier.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Building identifier
+          schema: { type: integer }
+          example: 10
+      responses:
+        '200':
+          description: OK — building found.
+        '404':
+          description: Not Found — no building with given id.
+      x-examples:
+        curl: |
+          curl -s http://localhost:8080/api/Building/10
+    delete:
+      tags: [Building]
+      summary: Delete building
+      description: Deletes the specified building.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Building identifier
+          schema: { type: integer }
+          example: 10
+      responses:
+        '204':
+          description: No Content — deleted.
+        '404':
+          description: Not Found — no building with given id.
+      x-examples:
+        curl: |
+          curl -X DELETE http://localhost:8080/api/Building/10
+
+  /api/Floor:
+    get:
+      tags: [Floor]
+      summary: List floors
+      description: Returns all floors.
+      responses:
+        '200':
+          description: OK — array of floors.
+      x-examples:
+        curl: |
+          curl -s http://localhost:8080/api/Floor
+    post:
+      tags: [Floor]
+      summary: Create floor
+      description: Creates a new floor; handles unique and foreign key conflicts.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Floor create payload (requires buildingId, floorNumber, floorPlanPath).
+              properties:
+                buildingId: { type: integer }
+                floorNumber: { type: integer }
+                floorPlanPath: { type: string }
+              required: [buildingId, floorNumber, floorPlanPath]
+            examples:
+              minimal:
+                summary: Minimal floor
+                value:
+                  buildingId: 10
+                  floorNumber: 2
+                  floorPlanPath: "/plans/b10-f2.png"
+              topFloor:
+                summary: Top floor
+                value:
+                  buildingId: 10
+                  floorNumber: 10
+                  floorPlanPath: "/plans/b10-f10.png"
+      responses:
+        '400':
+          description: One or more validation errors occurred.
+        '201':
+          description: Created — returns created floor.
+        '409':
+          description: Conflict — duplicate or missing building reference (problem+json).
+
+  /api/Floor/{id}:
+    get:
+      tags: [Floor]
+      summary: Get floor
+      description: Returns a single floor by identifier.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Floor identifier
+          schema: { type: integer }
+          example: 5
+      responses:
+        '200':
+          description: OK — floor found.
+        '404':
+          description: Not Found — no floor with given id.
+      x-examples:
+        curl: |
+          curl -s http://localhost:8080/api/Floor/5
+    delete:
+      tags: [Floor]
+      summary: Delete floor
+      description: Deletes the specified floor.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Floor identifier
+          schema: { type: integer }
+          example: 5
+      responses:
+        '204':
+          description: No Content — deleted.
+        '404':
+          description: Not Found — no floor with given id.
+      x-examples:
+        curl: |
+          curl -X DELETE http://localhost:8080/api/Floor/5
+
+  /api/Point:
+    get:
+      tags: [Point]
+      summary: List points
+      description: Returns all points.
+      responses:
+        '200':
+          description: OK — array of points.
+      x-examples:
+        curl: |
+          curl -s http://localhost:8080/api/Point
+    post:
+      tags: [Point]
+      summary: Create point
+      description: Creates a new point; handles unique and foreign key conflicts.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Point create payload (requires floorId, latitude, longitude).
+              properties:
+                floorId: { type: integer }
+                latitude: { type: number, format: double }
+                longitude: { type: number, format: double }
+              required: [floorId, latitude, longitude]
+            examples:
+              minimal:
+                summary: Minimal point
+                value:
+                  floorId: 5
+                  latitude: 54.6872
+                  longitude: 25.2797
+              precise:
+                summary: Higher precision
+                value:
+                  floorId: 5
+                  latitude: 54.687200
+                  longitude: 25.279700
+      responses:
+        '400':
+          description: One or more validation errors occurred.
+        '201':
+          description: Created — returns created point.
+        '409':
+          description: Conflict — duplicate or missing floor reference (problem+json).
+
+  /api/Point/{id}:
+    get:
+      tags: [Point]
+      summary: Get point
+      description: Returns a single point by identifier.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Point identifier
+          schema: { type: integer }
+          example: 100
+      responses:
+        '200':
+          description: OK — point found.
+        '404':
+          description: Not Found — no point with given id.
+      x-examples:
+        curl: |
+          curl -s http://localhost:8080/api/Point/100
+    delete:
+      tags: [Point]
+      summary: Delete point
+      description: Deletes the specified point.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Point identifier
+          schema: { type: integer }
+          example: 100
+      responses:
+        '204':
+          description: No Content — deleted.
+        '404':
+          description: Not Found — no point with given id.
+      x-examples:
+        curl: |
+          curl -X DELETE http://localhost:8080/api/Point/100
+
+  /api/Scan:
+    get:
+      tags: [Scan]
+      summary: List scans
+      description: Returns all scans.
+      responses:
+        '200':
+          description: OK — array of scans.
+      x-examples:
+        curl: |
+          curl -s http://localhost:8080/api/Scan
+    post:
+      tags: [Scan]
+      summary: Create scan
+      description: Creates a new scan; handles unique and foreign key conflicts.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Scan create payload (requires pointId; scannedAt defaults if omitted).
+              properties:
+                pointId: { type: integer }
+                scannedAt:
+                  type: string
+                  format: date-time
+                  nullable: true
+                filters:
+                  type: string
+                  nullable: true
+                apCount:
+                  type: integer
+              required: [pointId]
+            examples:
+              minimal:
+                summary: Minimal scan
+                value:
+                  pointId: 100
+              later:
+                summary: Later timestamp
+                value:
+                  pointId: 100
+                  scannedAt: "2025-10-05T13:30:00Z"
+      responses:
+        '400':
+          description: One or more validation errors occurred.
+        '201':
+          description: Created — returns created scan.
+        '409':
+          description: Conflict — duplicate or missing point reference (problem+json).
+
+  /api/Scan/{id}:
+    get:
+      tags: [Scan]
+      summary: Get scan
+      description: Returns a single scan by identifier.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Scan identifier
+          schema: { type: integer }
+          example: 200
+      responses:
+        '200':
+          description: OK — scan found.
+        '404':
+          description: Not Found — no scan with given id.
+      x-examples:
+        curl: |
+          curl -s http://localhost:8080/api/Scan/200
+    delete:
+      tags: [Scan]
+      summary: Delete scan
+      description: Deletes the specified scan.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Scan identifier
+          schema: { type: integer }
+          example: 200
+      responses:
+        '204':
+          description: No Content — deleted.
+        '404':
+          description: Not Found — no scan with given id.
+      x-examples:
+        curl: |
+          curl -X DELETE http://localhost:8080/api/Scan/200

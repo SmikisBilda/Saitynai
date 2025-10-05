@@ -1,0 +1,86 @@
+# --- OS / Editors ---
+.DS_Store [web:44]
+Thumbs.db [web:44]
+.vscode/ [web:44]
+.idea/ [web:44]
+*.code-workspace [web:44]
+
+# --- .NET build outputs ---
+bin/ [web:44]
+obj/ [web:44]
+[Bb]uild/ [web:44]
+[Ll]og/ [web:44]
+[Ll]ogs/ [web:44]
+
+# --- Visual Studio / Rider / VS for Mac ---
+.vs/ [web:44]
+*.user [web:44]
+*.userosscache [web:44]
+*.suo [web:44]
+*.sln.docstates [web:44]
+*.psess [web:44]
+*.vsp* [web:44]
+_ReSharper*/ [web:44]
+*.DotSettings.user [web:44]
+
+# --- NuGet ---
+*.nupkg [web:44]
+*.snupkg [web:44]
+packages/ [web:44]
+project.lock.json [web:44]
+project.fragment.lock.json [web:44]
+
+# --- Azure/Publish profiles ---
+*.pubxml [web:44]
+*.pubxml.user [web:44]
+
+# --- Coverage / analysis ---
+TestResult*/ [web:44]
+*.coverage* [web:44]
+.coverage/ [web:44]
+
+# --- Local tooling / cache ---
+*.pidb [web:44]
+*.svclog [web:44]
+*.tlog [web:44]
+*.cache/ [web:44]
+*.opendb [web:44]
+
+# --- Rider / JetBrains ---
+.idea/ [web:44]
+*.iml [web:44]
+
+# --- Environment / secrets (custom) ---
+secrets/ [web:44]
+*.env [web:44]
+.env* [web:44]
+*.secret [web:44]
+*.key [web:44]
+
+# --- Docker ---
+**/.dockerignore [web:44]
+.docker/ [web:44]
+docker-data/ [web:44]
+dbdata/ [web:44]
+.docker-compose/ [web:44]
+
+# Ignore local compose overrides and generated files
+docker-compose.override.yml [web:44]
+
+# --- Swagger UI build artifacts (keep source spec, ignore generated) ---
+wwwroot/swagger/* [web:44]
+!wwwroot/swagger/ [web:44]
+!wwwroot/swagger/api-spec.yaml [web:44]
+
+# --- User-specific settings / misc ---
+*.local.json [web:44]
+*.Development.local.json [web:44]
+*.orig [web:44]
+*.tmp [web:44]
+*.bak [web:44]
+~$* [web:44]
+
+# --- Optional: keep repo clean on Windows / Linux ---
+$RECYCLE.BIN/ [web:44]
+*.swp [web:44]
+*.swo [web:44]

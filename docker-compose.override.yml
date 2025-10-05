@@ -1,0 +1,38 @@
+services:
+  saitynai:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - DB_PASSWORD=/run/secrets/dbpass
+    ports:
+      - "8080:8080"
+    networks:
+      - bridged
+      - dbnet
+    secrets:
+      - dbpass
+
+  db:
+    networks:
+      - bridged
+      - dbnet
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/dbpass
+    secrets:
+      - dbpass
+
+networks:
+  bridged:
+    internal: false
+  dbnet:
+    internal: true
+secrets:
+  dbpass:
+    file: secrets/dbpass
+volumes:
+  dbdata:
+    external: false  
