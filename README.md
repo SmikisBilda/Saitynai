@@ -52,6 +52,7 @@ Sistemą sudaro dvi dalys:
 Programos reikalingos paleisti projektą:
 - Git
 - Docker
+
 Komandos reikalingos paleisti projektą:
 ```
 git clone https://github.com/SmikisBilda/Saitynai/
