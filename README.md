@@ -46,3 +46,22 @@ Sistemą sudaro dvi dalys:
 8. Ištrinti skanavimo taškus  
 9. Ištrinti konkretaus skanavimo taško prieigos taškų informaciją  
 10. Priskirti naudotojui skanavimo taškus
+
+
+## 2. Paleidimo instrukcijos
+Programos reikalingos paleisti projektą:
+- Git
+- Docker
+Komandos reikalingos paleisti projektą:
+```
+git clone https://github.com/SmikisBilda/Saitynai/
+cd Saitynai
+docker-compose build
+docker-compose up -d
+```
+Programa turėtu būti pasiekiama per:
+```
+http://localhost:8080/swagger
+```
+
+
