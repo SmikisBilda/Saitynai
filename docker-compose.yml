@@ -3,6 +3,10 @@ services:
     image: saitynai:v1
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./DockerfileAPI
   db:
-    image: postgres:17.6
+    image: db:v1
+    build:
+      context: .
+      dockerfile: ./DockerfileDB
+
