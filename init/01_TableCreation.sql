@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS saitynai.access_point (
   id serial4 PRIMARY KEY,
   scan_id int4 NOT NULL,
   ssid text NULL,
-  bssid macaddr NOT NULL,
+  bssid text NOT NULL,
   capabilities text NULL,
   centerfreq0 int4 NULL,
   centerfreq1 int4 NULL,
