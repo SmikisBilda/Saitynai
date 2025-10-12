@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Saitynai.Models;
 using Npgsql;
 
+
 namespace Saitynai.Controllers
 {
     [Route("api/[controller]")]
@@ -41,31 +42,77 @@ namespace Saitynai.Controllers
 
             return building;
         }
-    [HttpPost]
-    public async Task<ActionResult<Building>> PostBuilding(Building building)
-    {
-        try
-        {
-            _context.Building.Add(building);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBuilding", new { id = building.Id }, building);
-        }
-        // 23505: unique/primary key violation (duplicate id or other unique constraint)
-        catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == PostgresErrorCodes.UniqueViolation)
+        [HttpGet("{id:int}/points")]
+        public async Task<ActionResult<IEnumerable<Point>>> GetBuildingPoints(int id)
         {
-            var pd = new ProblemDetails
+            
+            var buildingExists = await _context.Building.AnyAsync(b => b.Id == id);
+            if (!buildingExists)
             {
-                Status = StatusCodes.Status409Conflict,
-                Type  = "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
-                Title = "Conflict",
-                Detail = "A building with the same identifier already exists."
-            };
-            pd.Extensions["constraint"] = pg.ConstraintName;
-            return Conflict(pd);
+                return NotFound();
+            }
+
+         
+            var points = await
+                (from p in _context.Point
+                join f in _context.Floor on p.FloorId equals f.Id
+                where f.BuildingId == id
+                select p)
+                .ToListAsync();
+
+            return points;
         }
 
-    }
+        [HttpPost]
+        public async Task<ActionResult<Building>> PostBuilding(Building building)
+        {
+            try
+            {
+                _context.Building.Add(building);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetBuilding", new { id = building.Id }, building);
+            }
+            // 23505: unique/primary key violation (duplicate id or other unique constraint)
+            catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == PostgresErrorCodes.UniqueViolation)
+            {
+                var pd = new ProblemDetails
+                {
+                    Status = StatusCodes.Status409Conflict,
+                    Type  = "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
+                    Title = "Conflict",
+                    Detail = "A building with the same identifier already exists."
+                };
+                pd.Extensions["constraint"] = pg.ConstraintName;
+                return Conflict(pd);
+            }
+        }
+
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutBuilding(int id, Building building)
+        {
+
+            if (id != building.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(building).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbUpdateConcurrencyException) when (!BuildingExists(id))
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
 
 
         // DELETE: api/Building/5

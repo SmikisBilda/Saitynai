@@ -84,6 +84,23 @@ namespace Saitynai.Controllers
         }
 
 
+        [HttpGet("point/{pointId:int}")]
+        public async Task<ActionResult<IEnumerable<Scan>>> GetPointsByPoint(int pointId)
+        {
+        
+            var pointExists = await _context.Point.AnyAsync(b => b.Id == pointId);
+            if (!pointExists)
+            {
+                return NotFound();
+            }
+
+            var scans = await _context.Scan
+                .Where(f => f.PointId == pointId)
+                .ToListAsync();
+
+            return scans;
+        }
+
         // DELETE: api/Scan/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteScan(int id)

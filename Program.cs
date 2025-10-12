@@ -33,9 +33,6 @@ app.UseSwagger();
 // Option A: Use Swagger UI to read the static YAML
 app.UseSwaggerUI(c =>
 {
-    // Point Swagger UI to the static YAML file
-    c.SwaggerEndpoint("/swagger/api-spec.yaml", "Saitynai API");
-    // Optional: make this UI the default route
     c.RoutePrefix = "swagger";
 });
 

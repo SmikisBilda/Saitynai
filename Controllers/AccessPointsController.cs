@@ -81,7 +81,7 @@ namespace Saitynai.Controllers
             {
                 ScanId = dto.ScanId,
                 Ssid = dto.Ssid,
-                Bssid = bssid,
+                Bssid = dto.Bssid,
                 Capabilities = dto.Capabilities,
                 Centerfreq0 = dto.Centerfreq0,
                 Centerfreq1 = dto.Centerfreq1,
@@ -102,7 +102,7 @@ namespace Saitynai.Controllers
                     Status = StatusCodes.Status409Conflict,
                     Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
                     Title = "Conflict",
-                    Detail = "An access point with the same identifier already exists."
+                    Detail = "An access scan with the same identifier already exists."
                 };
                 dup.Extensions["constraint"] = pg.ConstraintName;
                 return Conflict(dup);
@@ -125,6 +125,22 @@ namespace Saitynai.Controllers
         }
 
 
+        [HttpGet("scan/{scanId:int}")]
+        public async Task<ActionResult<IEnumerable<AccessPoint>>> GetPointsByScan(int scanId)
+        {
+        
+            var scanExists = await _context.Scan.AnyAsync(b => b.Id == scanId);
+            if (!scanExists)
+            {
+                return NotFound();
+            }
+
+            var accessPoints = await _context.AccessPoint
+                .Where(f => f.ScanId == scanId)
+                .ToListAsync();
+
+            return accessPoints;
+        }
 
         // DELETE: api/AccessPoints/5
         [HttpDelete("{id}")]

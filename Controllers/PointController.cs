@@ -42,7 +42,22 @@ namespace Saitynai.Controllers
             return point;
         }
 
+        [HttpGet("floor/{floorId:int}")]
+        public async Task<ActionResult<IEnumerable<Point>>> GetFloorsByFloor(int floorId)
+        {
+        
+            var floorExists = await _context.Floor.AnyAsync(b => b.Id == floorId);
+            if (!floorExists)
+            {
+                return NotFound();
+            }
 
+            var points = await _context.Point
+                .Where(f => f.FloorId == floorId)
+                .ToListAsync();
+
+            return points;
+        }
         // POST: api/Point
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

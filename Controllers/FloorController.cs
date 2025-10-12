@@ -82,6 +82,46 @@ namespace Saitynai.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutFloor(int id, Floor building)
+        {
+
+            if (id != building.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(building).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            catch (DbUpdateConcurrencyException) when (!FloorExists(id))
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        [HttpGet("building/{buildingId:int}")]
+        public async Task<ActionResult<IEnumerable<Floor>>> GetFloorsByBuilding(int buildingId)
+        {
+        
+            var buildingExists = await _context.Building.AnyAsync(b => b.Id == buildingId);
+            if (!buildingExists)
+            {
+                return NotFound();
+            }
+
+            var floors = await _context.Floor
+                .Where(f => f.BuildingId == buildingId)
+                .ToListAsync();
+
+            return floors;
+        }
 
         // DELETE: api/Floor/5
         [HttpDelete("{id}")]

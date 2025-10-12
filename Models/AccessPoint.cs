@@ -12,7 +12,7 @@ public partial class AccessPoint
 
     public string? Ssid { get; set; }
 
-    public PhysicalAddress Bssid { get; set; } = null!;
+    public string Bssid { get; set; } = null!;
 
     public string? Capabilities { get; set; }
 
