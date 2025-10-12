@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using Npgsql;
 var builder = WebApplication.CreateBuilder(args);
 var baseConn = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -21,7 +22,24 @@ builder.Services.AddDbContext<SaitynaiContext>(opt =>
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "AccesPointsSaitynai API",
+        Version = "v1",
+        Description = "OpenAPI specification for the AccesPointsSaitynai service"
+    });
+
+    // Include XML comments if available (enable GenerateDocumentationFile in csproj)
+    var xmlFile = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + ".xml";
+    var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (System.IO.File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+    }
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,12 +47,9 @@ var app = builder.Build();
 app.UseStaticFiles();
 
 app.MapOpenApi();
+
 app.UseSwagger();
-// Option A: Use Swagger UI to read the static YAML
-app.UseSwaggerUI(c =>
-{
-    c.RoutePrefix = "swagger";
-});
+app.UseSwaggerUI();
 
 
 

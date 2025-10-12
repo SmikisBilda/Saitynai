@@ -12,6 +12,7 @@ namespace Saitynai.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class ScanController : ControllerBase
     {
         private readonly SaitynaiContext _context;
@@ -21,15 +22,25 @@ namespace Saitynai.Controllers
             _context = context;
         }
 
-        // GET: api/Scan
+        /// <summary>
+        /// Get all scans.
+        /// </summary>
+        /// <returns>List of scans.</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Scan>))]
         public async Task<ActionResult<IEnumerable<Scan>>> GetScan()
         {
             return await _context.Scan.ToListAsync();
         }
 
-        // GET: api/Scan/5
+        /// <summary>
+        /// Get a scan by id.
+        /// </summary>
+        /// <param name="id">Scan identifier.</param>
+        /// <returns>The requested scan.</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Scan))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Scan>> GetScan(int id)
         {
             var scan = await _context.Scan.FindAsync(id);
@@ -42,10 +53,15 @@ namespace Saitynai.Controllers
             return scan;
         }
 
-
-        // POST: api/Scan
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Create a scan.
+        /// </summary>
+        /// <param name="scan">Scan payload.</param>
+        /// <returns>The created scan.</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Scan))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
         public async Task<ActionResult<Scan>> PostScan(Scan scan)
         {
             try
@@ -83,11 +99,16 @@ namespace Saitynai.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Get all scans for a point.
+        /// </summary>
+        /// <param name="pointId">Point identifier.</param>
+        /// <returns>List of scans for the specified point.</returns>
         [HttpGet("point/{pointId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Scan>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<Scan>>> GetPointsByPoint(int pointId)
         {
-        
             var pointExists = await _context.Point.AnyAsync(b => b.Id == pointId);
             if (!pointExists)
             {
@@ -101,8 +122,14 @@ namespace Saitynai.Controllers
             return scans;
         }
 
-        // DELETE: api/Scan/5
+        /// <summary>
+        /// Delete a scan by id.
+        /// </summary>
+        /// <param name="id">Scan identifier.</param>
+        /// <returns>No content on success.</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteScan(int id)
         {
             var scan = await _context.Scan.FindAsync(id);

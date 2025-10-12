@@ -12,6 +12,7 @@ namespace Saitynai.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class FloorController : ControllerBase
     {
         private readonly SaitynaiContext _context;
@@ -21,15 +22,25 @@ namespace Saitynai.Controllers
             _context = context;
         }
 
-        // GET: api/Floor
+        /// <summary>
+        /// Get all floors.
+        /// </summary>
+        /// <returns>List of floors.</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Floor>))]
         public async Task<ActionResult<IEnumerable<Floor>>> GetFloor()
         {
             return await _context.Floor.ToListAsync();
         }
 
-        // GET: api/Floor/5
+        /// <summary>
+        /// Get a floor by id.
+        /// </summary>
+        /// <param name="id">Floor identifier.</param>
+        /// <returns>The requested floor.</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Floor))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Floor>> GetFloor(int id)
         {
             var floor = await _context.Floor.FindAsync(id);
@@ -42,9 +53,15 @@ namespace Saitynai.Controllers
             return floor;
         }
 
-        // POST: api/Floor
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Create a floor.
+        /// </summary>
+        /// <param name="floor">Floor payload.</param>
+        /// <returns>The created floor.</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Floor))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
         public async Task<ActionResult<Floor>> PostFloor(Floor floor)
         {
             try
@@ -54,7 +71,7 @@ namespace Saitynai.Controllers
 
                 return CreatedAtAction("GetFloor", new { id = floor.Id }, floor);
             }
-
+            // Unique violation => 409 Conflict
             catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == PostgresErrorCodes.UniqueViolation)
             {
                 var pd = new ProblemDetails
@@ -67,7 +84,7 @@ namespace Saitynai.Controllers
                 pd.Extensions["constraint"] = pg.ConstraintName;
                 return Conflict(pd);
             }
-         
+            // FK violation => 409 Conflict
             catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == PostgresErrorCodes.ForeignKeyViolation)
             {
                 var pd = new ProblemDetails
@@ -82,22 +99,29 @@ namespace Saitynai.Controllers
             }
         }
 
+        /// <summary>
+        /// Update a floor by id.
+        /// </summary>
+        /// <param name="id">Floor identifier from URL.</param>
+        /// <param name="floor">Updated floor payload.</param>
+        /// <returns>No content on success.</returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFloor(int id, Floor building)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PutFloor(int id, Floor floor)
         {
-
-            if (id != building.Id)
+            if (id != floor.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(building).State = EntityState.Modified;
+            _context.Entry(floor).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-
             catch (DbUpdateConcurrencyException) when (!FloorExists(id))
             {
                 return NotFound();
@@ -106,10 +130,16 @@ namespace Saitynai.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Get all floors for a building.
+        /// </summary>
+        /// <param name="buildingId">Building identifier.</param>
+        /// <returns>List of floors for the specified building.</returns>
         [HttpGet("building/{buildingId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Floor>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<Floor>>> GetFloorsByBuilding(int buildingId)
         {
-        
             var buildingExists = await _context.Building.AnyAsync(b => b.Id == buildingId);
             if (!buildingExists)
             {
@@ -123,8 +153,14 @@ namespace Saitynai.Controllers
             return floors;
         }
 
-        // DELETE: api/Floor/5
+        /// <summary>
+        /// Delete a floor by id.
+        /// </summary>
+        /// <param name="id">Floor identifier.</param>
+        /// <returns>No content on success.</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteFloor(int id)
         {
             var floor = await _context.Floor.FindAsync(id);

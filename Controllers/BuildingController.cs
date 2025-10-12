@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Saitynai.Models;
 using Npgsql;
 
-
 namespace Saitynai.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class BuildingController : ControllerBase
     {
         private readonly SaitynaiContext _context;
@@ -22,49 +22,70 @@ namespace Saitynai.Controllers
             _context = context;
         }
 
-        // GET: api/Building
+        /// <summary>
+        /// Get all buildings.
+        /// </summary>
+        /// <returns>List of buildings.</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Building>))]
         public async Task<ActionResult<IEnumerable<Building>>> GetBuilding()
         {
             return await _context.Building.ToListAsync();
         }
 
-        // GET: api/Building/5
+        /// <summary>
+        /// Get a building by id.
+        /// </summary>
+        /// <param name="id">Building identifier.</param>
+        /// <returns>The requested building.</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Building))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Building>> GetBuilding(int id)
         {
             var building = await _context.Building.FindAsync(id);
-
             if (building == null)
             {
                 return NotFound();
             }
-
             return building;
         }
 
+        /// <summary>
+        /// Get all points under a building.
+        /// </summary>
+        /// <param name="id">Building identifier.</param>
+        /// <returns>List of points for the building (via floors).</returns>
         [HttpGet("{id:int}/points")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Point>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<Point>>> GetBuildingPoints(int id)
         {
-            
             var buildingExists = await _context.Building.AnyAsync(b => b.Id == id);
             if (!buildingExists)
             {
                 return NotFound();
             }
 
-         
             var points = await
                 (from p in _context.Point
-                join f in _context.Floor on p.FloorId equals f.Id
-                where f.BuildingId == id
-                select p)
+                 join f in _context.Floor on p.FloorId equals f.Id
+                 where f.BuildingId == id
+                 select p)
                 .ToListAsync();
 
             return points;
         }
 
+        /// <summary>
+        /// Create a building.
+        /// </summary>
+        /// <param name="building">Building payload.</param>
+        /// <returns>The created building.</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Building))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
         public async Task<ActionResult<Building>> PostBuilding(Building building)
         {
             try
@@ -89,11 +110,18 @@ namespace Saitynai.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Update a building by id.
+        /// </summary>
+        /// <param name="id">Building identifier from URL.</param>
+        /// <param name="building">Updated building payload.</param>
+        /// <returns>No content on success.</returns>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutBuilding(int id, Building building)
         {
-
             if (id != building.Id)
             {
                 return BadRequest();
@@ -105,7 +133,6 @@ namespace Saitynai.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-
             catch (DbUpdateConcurrencyException) when (!BuildingExists(id))
             {
                 return NotFound();
@@ -114,9 +141,14 @@ namespace Saitynai.Controllers
             return NoContent();
         }
 
-
-        // DELETE: api/Building/5
+        /// <summary>
+        /// Delete a building by id.
+        /// </summary>
+        /// <param name="id">Building identifier.</param>
+        /// <returns>No content on success.</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteBuilding(int id)
         {
             var building = await _context.Building.FindAsync(id);

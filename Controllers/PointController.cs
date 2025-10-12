@@ -12,6 +12,7 @@ namespace Saitynai.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class PointController : ControllerBase
     {
         private readonly SaitynaiContext _context;
@@ -21,15 +22,25 @@ namespace Saitynai.Controllers
             _context = context;
         }
 
-        // GET: api/Point
+        /// <summary>
+        /// Get all points.
+        /// </summary>
+        /// <returns>List of points.</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Point>))]
         public async Task<ActionResult<IEnumerable<Point>>> GetPoint()
         {
             return await _context.Point.ToListAsync();
         }
 
-        // GET: api/Point/5
+        /// <summary>
+        /// Get a point by id.
+        /// </summary>
+        /// <param name="id">Point identifier.</param>
+        /// <returns>The requested point.</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Point))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Point>> GetPoint(int id)
         {
             var point = await _context.Point.FindAsync(id);
@@ -42,10 +53,16 @@ namespace Saitynai.Controllers
             return point;
         }
 
+        /// <summary>
+        /// Get all points for a floor.
+        /// </summary>
+        /// <param name="floorId">Floor identifier.</param>
+        /// <returns>List of points for the specified floor.</returns>
         [HttpGet("floor/{floorId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Point>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<Point>>> GetFloorsByFloor(int floorId)
         {
-        
             var floorExists = await _context.Floor.AnyAsync(b => b.Id == floorId);
             if (!floorExists)
             {
@@ -58,9 +75,16 @@ namespace Saitynai.Controllers
 
             return points;
         }
-        // POST: api/Point
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+        /// <summary>
+        /// Create a point.
+        /// </summary>
+        /// <param name="point">Point payload.</param>
+        /// <returns>The created point.</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Point))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
         public async Task<ActionResult<Point>> PostPoint(Point point)
         {
             try
@@ -98,9 +122,14 @@ namespace Saitynai.Controllers
             }
         }
 
-
-        // DELETE: api/Point/5
+        /// <summary>
+        /// Delete a point by id.
+        /// </summary>
+        /// <param name="id">Point identifier.</param>
+        /// <returns>No content on success.</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeletePoint(int id)
         {
             var point = await _context.Point.FindAsync(id);

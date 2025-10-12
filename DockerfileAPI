@@ -14,7 +14,7 @@ WORKDIR /src
 COPY ["Saitynai.csproj", "SaitynaiAPI/"]
 RUN dotnet restore "./SaitynaiAPI/Saitynai.csproj"
 COPY . ./SaitynaiAPI/
-COPY ./wwwroot ./wwwroot
+
 WORKDIR "/src/SaitynaiAPI"
 RUN dotnet build "./Saitynai.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

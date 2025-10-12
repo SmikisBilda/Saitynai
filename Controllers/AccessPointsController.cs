@@ -10,9 +10,9 @@ using Npgsql;
 
 namespace Saitynai.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class AccessPointsController : ControllerBase
     {
         private readonly SaitynaiContext _context;
@@ -22,15 +22,25 @@ namespace Saitynai.Controllers
             _context = context;
         }
 
-
+        /// <summary>
+        /// Get all access points.
+        /// </summary>
+        /// <returns>List of access points.</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AccessPoint>))]
         public async Task<ActionResult<IEnumerable<AccessPoint>>> GetAccessPoint()
         {
             return await _context.AccessPoint.ToListAsync();
         }
 
-        // GET: api/AccessPoints/5
+        /// <summary>
+        /// Get an access point by id.
+        /// </summary>
+        /// <param name="id">Access point identifier.</param>
+        /// <returns>The requested access point.</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccessPoint))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AccessPoint>> GetAccessPoint(int id)
         {
             var accessPoint = await _context.AccessPoint.FindAsync(id);
@@ -43,10 +53,15 @@ namespace Saitynai.Controllers
             return accessPoint;
         }
 
-        // POST: api/AccessPoints
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-      
+        /// <summary>
+        /// Create a new access point.
+        /// </summary>
+        /// <param name="dto">Access point payload.</param>
+        /// <returns>The created access point.</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AccessPoint))]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity, Type = typeof(ProblemDetails))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> PostAccessPoint([FromBody] AccessPointCreateDto dto)
         {
             var pd = new ProblemDetails
@@ -124,11 +139,16 @@ namespace Saitynai.Controllers
             return CreatedAtAction(nameof(GetAccessPoint), new { id = entity.Id }, entity);
         }
 
-
+        /// <summary>
+        /// Get all access points for a scan.
+        /// </summary>
+        /// <param name="scanId">Scan identifier.</param>
+        /// <returns>List of access points for the specified scan.</returns>
         [HttpGet("scan/{scanId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AccessPoint>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<AccessPoint>>> GetPointsByScan(int scanId)
         {
-        
             var scanExists = await _context.Scan.AnyAsync(b => b.Id == scanId);
             if (!scanExists)
             {
@@ -142,8 +162,14 @@ namespace Saitynai.Controllers
             return accessPoints;
         }
 
-        // DELETE: api/AccessPoints/5
+        /// <summary>
+        /// Delete an access point by id.
+        /// </summary>
+        /// <param name="id">Access point identifier.</param>
+        /// <returns>No content on success.</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAccessPoint(int id)
         {
             var accessPoint = await _context.AccessPoint.FindAsync(id);
