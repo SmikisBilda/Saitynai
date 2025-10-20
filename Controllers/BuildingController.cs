@@ -52,30 +52,212 @@ namespace Saitynai.Controllers
         }
 
         /// <summary>
-        /// Get all points under a building.
+        /// Get a single point under a specific floor and building.
         /// </summary>
-        /// <param name="id">Building identifier.</param>
-        /// <returns>List of points for the building (via floors).</returns>
-        [HttpGet("{id:int}/points")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Point>))]
+        /// <param name="buildingId">Building identifier.</param>
+        /// <param name="floorId">Floor identifier.</param>
+        /// <param name="pointId">Point identifier.</param>
+        /// <returns>A point belonging to the given floor within the building.</returns>
+        [HttpGet("{buildingId:int}/floors/{floorId:int}/points/{pointId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Point))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<Point>>> GetBuildingPoints(int id)
+        public async Task<ActionResult<Point>> GetBuildingFloorPoint(int buildingId, int floorId, int pointId)
         {
-            var buildingExists = await _context.Building.AnyAsync(b => b.Id == id);
+
+            var buildingExists = await _context.Building.AnyAsync(b => b.Id == buildingId);
             if (!buildingExists)
             {
-                return NotFound();
+                return Problem(
+                    type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                    title: "Not Found",
+                    detail: $"Building with ID {buildingId} not found.",
+                    statusCode: StatusCodes.Status404NotFound
+                );
             }
 
-            var points = await
-                (from p in _context.Point
-                 join f in _context.Floor on p.FloorId equals f.Id
-                 where f.BuildingId == id
-                 select p)
-                .ToListAsync();
+            var floorExists = await _context.Floor.AnyAsync(f => f.Id == floorId && f.BuildingId == buildingId);
+            if (!floorExists)
+            {
+                return Problem(
+                    type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                    title: "Not Found",
+                    detail: $"Floor with ID {floorId} not found in building {buildingId}.",
+                    statusCode: StatusCodes.Status404NotFound
+                );
+            }
 
-            return points;
+            var point = await _context.Point
+                .Where(p => p.Id == pointId && p.FloorId == floorId)
+                .FirstOrDefaultAsync();
+
+            if (point == null)
+            {
+                return Problem(
+                    type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                    title: "Not Found",
+                    detail: $"Point with ID {pointId} not found on floor {floorId} in building {buildingId}.",
+                    statusCode: StatusCodes.Status404NotFound
+                );
+            }
+
+            return Ok(point);
         }
+
+    
+
+    /// <summary>
+    /// Get a single AccessPoint under specific scan, point, floor, and building.
+    /// </summary>
+    /// <param name="buildingId">Building identifier.</param>
+    /// <param name="floorId">Floor identifier.</param>
+    /// <param name="pointId">Point identifier.</param>
+    /// <param name="scanId">Scan identifier.</param>
+    /// <param name="accessPointId">AccessPoint identifier.</param>
+    /// <returns>An AccessPoint belonging to the specified hierarchy.</returns>
+    [HttpGet("{buildingId:int}/floors/{floorId:int}/points/{pointId:int}/scans/{scanId:int}/accesspoints/{accessPointId:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccessPoint))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<AccessPoint>> GetBuildingFloorPointScanAccessPoint(
+        int buildingId,
+        int floorId,
+        int pointId,
+        int scanId,
+        int accessPointId)
+    {
+        // Verify building exists
+        var buildingExists = await _context.Building.AnyAsync(b => b.Id == buildingId);
+        if (!buildingExists)
+        {
+            return Problem(
+                type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                title: "Not Found",
+                detail: $"Building with ID {buildingId} not found.",
+                statusCode: StatusCodes.Status404NotFound
+            );
+        }
+
+        // Verify floor exists in building
+        var floorExists = await _context.Floor.AnyAsync(f => f.Id == floorId && f.BuildingId == buildingId);
+        if (!floorExists)
+        {
+            return Problem(
+                type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                title: "Not Found",
+                detail: $"Floor with ID {floorId} not found in building {buildingId}.",
+                statusCode: StatusCodes.Status404NotFound
+            );
+        }
+
+        // Verify point exists on floor
+        var pointExists = await _context.Point.AnyAsync(p => p.Id == pointId && p.FloorId == floorId);
+        if (!pointExists)
+        {
+            return Problem(
+                type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                title: "Not Found",
+                detail: $"Point with ID {pointId} not found on floor {floorId} in building {buildingId}.",
+                statusCode: StatusCodes.Status404NotFound
+            );
+        }
+
+        // Verify scan exists on point
+        var scanExists = await _context.Scan.AnyAsync(s => s.Id == scanId && s.PointId == pointId);
+        if (!scanExists)
+        {
+            return Problem(
+                type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                title: "Not Found",
+                detail: $"Scan with ID {scanId} not found for point {pointId} on floor {floorId} in building {buildingId}.",
+                statusCode: StatusCodes.Status404NotFound
+            );
+        }
+
+        // Retrieve the access point
+        var accessPoint = await _context.AccessPoint
+            .Where(ap => ap.Id == accessPointId && ap.ScanId == scanId)
+            .FirstOrDefaultAsync();
+
+        if (accessPoint == null)
+        {
+            return Problem(
+                type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                title: "Not Found",
+                detail: $"AccessPoint with ID {accessPointId} not found for scan {scanId} on point {pointId}, floor {floorId} in building {buildingId}.",
+                statusCode: StatusCodes.Status404NotFound
+            );
+        }
+
+        return Ok(accessPoint);
+    }
+
+
+
+        /// <summary>
+        /// Get a single scan under a specific point, floor, and building.
+        /// </summary>
+        /// <param name="buildingId">Building identifier.</param>
+        /// <param name="floorId">Floor identifier.</param>
+        /// <param name="pointId">Point identifier.</param>
+        /// <param name="scanId">Scan identifier.</param>
+        /// <returns>A scan belonging to the specified point, floor, and building.</returns>
+        [HttpGet("{buildingId:int}/floors/{floorId:int}/points/{pointId:int}/scans/{scanId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Scan))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Scan>> GetBuildingFloorPointScan(int buildingId, int floorId, int pointId, int scanId)
+        {
+
+            var buildingExists = await _context.Building.AnyAsync(b => b.Id == buildingId);
+            if (!buildingExists)
+            {
+                return Problem(
+                    type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                    title: "Not Found",
+                    detail: $"Building with ID {buildingId} not found.",
+                    statusCode: StatusCodes.Status404NotFound
+                );
+            }
+
+
+            var floorExists = await _context.Floor.AnyAsync(f => f.Id == floorId && f.BuildingId == buildingId);
+            if (!floorExists)
+            {
+                return Problem(
+                    type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                    title: "Not Found",
+                    detail: $"Floor with ID {floorId} not found in building {buildingId}.",
+                    statusCode: StatusCodes.Status404NotFound
+                );
+            }
+
+   
+            var pointExists = await _context.Point.AnyAsync(p => p.Id == pointId && p.FloorId == floorId);
+            if (!pointExists)
+            {
+                return Problem(
+                    type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                    title: "Not Found",
+                    detail: $"Point with ID {pointId} not found on floor {floorId} in building {buildingId}.",
+                    statusCode: StatusCodes.Status404NotFound
+                );
+            }
+
+            
+            var scan = await _context.Scan.FirstOrDefaultAsync(s => s.Id == scanId && s.PointId == pointId);
+            if (scan == null)
+            {
+                return Problem(
+                    type: "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                    title: "Not Found",
+                    detail: $"Scan with ID {scanId} not found for point {pointId} on floor {floorId} in building {buildingId}.",
+                    statusCode: StatusCodes.Status404NotFound
+                );
+            }
+
+            return Ok(scan);
+        }
+
+
+
 
         /// <summary>
         /// Create a building.
