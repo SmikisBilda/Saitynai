@@ -7,17 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Saitynai.Models;
 using Npgsql;
+using Saitynai.Authorization; 
+using Microsoft.AspNetCore.Authorization; 
 
 namespace Saitynai.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize]
     public class FloorController : ControllerBase
     {
-        private readonly SaitynaiContext _context;
+        private readonly PostgresContext _context;
 
-        public FloorController(SaitynaiContext context)
+        public FloorController(PostgresContext context)
         {
             _context = context;
         }
@@ -27,6 +30,7 @@ namespace Saitynai.Controllers
         /// </summary>
         /// <returns>List of floors.</returns>
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Floor>))]
         public async Task<ActionResult<IEnumerable<Floor>>> GetFloor()
         {
@@ -39,6 +43,7 @@ namespace Saitynai.Controllers
         /// <param name="id">Floor identifier.</param>
         /// <returns>The requested floor.</returns>
         [HttpGet("{id}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Floor))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Floor>> GetFloor(int id)
@@ -59,6 +64,7 @@ namespace Saitynai.Controllers
         /// <param name="floor">Floor payload.</param>
         /// <returns>The created floor.</returns>
         [HttpPost]
+        [PermissionAuthorize("create", "Floor")] 
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Floor))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
@@ -106,6 +112,7 @@ namespace Saitynai.Controllers
         /// <param name="floor">Updated floor payload.</param>
         /// <returns>No content on success.</returns>
         [HttpPut("{id}")]
+        [PermissionAuthorize("edit", "Floor")] 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -136,6 +143,7 @@ namespace Saitynai.Controllers
         /// <param name="buildingId">Building identifier.</param>
         /// <returns>List of floors for the specified building.</returns>
         [HttpGet("building/{buildingId:int}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Floor>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<Floor>>> GetFloorsByBuilding(int buildingId)
@@ -159,6 +167,7 @@ namespace Saitynai.Controllers
         /// <param name="id">Floor identifier.</param>
         /// <returns>No content on success.</returns>
         [HttpDelete("{id}")]
+        [PermissionAuthorize("delete", "Floor")] 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteFloor(int id)

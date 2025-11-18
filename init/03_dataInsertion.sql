@@ -3,6 +3,32 @@ BEGIN;
 -- Optional: ensure all deferrable constraints are deferred for this transaction
 SET CONSTRAINTS ALL DEFERRED;
 
+INSERT INTO saitynai.users (username, email, password_hash) VALUES
+  ('Admin', 'Admin@Admin.com', '$2a$11$KKJHXJP5gzZR1f3g/Vyj1.VehriXGQhPr4TjTkhsxiySIoAKi4D9e'),
+  ('User', 'User@User.com', '$2a$11$AWnWZya3dzfavE0N6aQ1lu16GuBKxioGPbFMZi/i4jv5ZMnso34Um');
+
+INSERT INTO saitynai.permissions ("name") VALUES
+	 ('edit'),
+	 ('create'),
+	 ('delete');
+
+INSERT INTO saitynai.roles ("name") VALUES
+	 ('Admin'),
+	 ('User');
+
+INSERT INTO saitynai.user_roles (user_id,role_id) VALUES
+	 (1,1),
+	 (2,2);
+
+INSERT INTO saitynai.role_permissions (role_id,permission_id,resource_type_id,resource_id,allow,"cascade") VALUES
+	 (1,1,1,1,true,true),
+	 (1,2,1,1,true,true),
+	 (1,3,1,1,true,true),
+	 (1,2,1,200,true,true),
+	 (1,3,1,200,true,true),
+	 (2,1,2,1,true,true),
+	 (2,2,2,1,true,true);
+
 -- Buildings
 INSERT INTO saitynai.building (id, address, "name") VALUES
   (1, '123 University Ave', 'Main Campus A'),

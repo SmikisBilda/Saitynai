@@ -7,17 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Saitynai.Models;
 using Npgsql;
+using Microsoft.AspNetCore.Authorization;
+using Saitynai.Authorization; 
 
 namespace Saitynai.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize]
     public class BuildingController : ControllerBase
     {
-        private readonly SaitynaiContext _context;
+        private readonly PostgresContext _context;
 
-        public BuildingController(SaitynaiContext context)
+        public BuildingController(PostgresContext context)
         {
             _context = context;
         }
@@ -27,6 +30,7 @@ namespace Saitynai.Controllers
         /// </summary>
         /// <returns>List of buildings.</returns>
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Building>))]
         public async Task<ActionResult<IEnumerable<Building>>> GetBuilding()
         {
@@ -39,6 +43,7 @@ namespace Saitynai.Controllers
         /// <param name="id">Building identifier.</param>
         /// <returns>The requested building.</returns>
         [HttpGet("{id}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Building))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Building>> GetBuilding(int id)
@@ -59,6 +64,7 @@ namespace Saitynai.Controllers
         /// <param name="pointId">Point identifier.</param>
         /// <returns>A point belonging to the given floor within the building.</returns>
         [HttpGet("{buildingId:int}/floors/{floorId:int}/points/{pointId:int}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Point))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Point>> GetBuildingFloorPoint(int buildingId, int floorId, int pointId)
@@ -117,6 +123,7 @@ namespace Saitynai.Controllers
     [HttpGet("{buildingId:int}/floors/{floorId:int}/points/{pointId:int}/scans/{scanId:int}/accesspoints/{accessPointId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AccessPoint))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [AllowAnonymous]
     public async Task<ActionResult<AccessPoint>> GetBuildingFloorPointScanAccessPoint(
         int buildingId,
         int floorId,
@@ -203,6 +210,7 @@ namespace Saitynai.Controllers
         [HttpGet("{buildingId:int}/floors/{floorId:int}/points/{pointId:int}/scans/{scanId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Scan))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<ActionResult<Scan>> GetBuildingFloorPointScan(int buildingId, int floorId, int pointId, int scanId)
         {
 
@@ -265,6 +273,7 @@ namespace Saitynai.Controllers
         /// <param name="building">Building payload.</param>
         /// <returns>The created building.</returns>
         [HttpPost]
+        [PermissionAuthorize("create", "Building")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Building))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
@@ -299,6 +308,7 @@ namespace Saitynai.Controllers
         /// <param name="building">Updated building payload.</param>
         /// <returns>No content on success.</returns>
         [HttpPut("{id}")]
+        [PermissionAuthorize("edit", "Building")] 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -329,6 +339,7 @@ namespace Saitynai.Controllers
         /// <param name="id">Building identifier.</param>
         /// <returns>No content on success.</returns>
         [HttpDelete("{id}")]
+        [PermissionAuthorize("delete", "Building")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteBuilding(int id)

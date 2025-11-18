@@ -7,27 +7,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Saitynai.Models;
 using Npgsql;
-
+using Saitynai.Authorization; 
+using Microsoft.AspNetCore.Authorization; 
 namespace Saitynai.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize]
     public class PointController : ControllerBase
     {
-        private readonly SaitynaiContext _context;
+        private readonly PostgresContext _context;
 
-        public PointController(SaitynaiContext context)
+        public PointController(PostgresContext context)
         {
             _context = context;
         }
 
         /// <summary>
-        /// Get all points.
+        /// Get all points. Requires a global 'view' permission on 'Point'.
         /// </summary>
         /// <returns>List of points.</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Point>))]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Point>>> GetPoint()
         {
             return await _context.Point.ToListAsync();
@@ -41,6 +44,7 @@ namespace Saitynai.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Point))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<ActionResult<Point>> GetPoint(int id)
         {
             var point = await _context.Point.FindAsync(id);
@@ -61,12 +65,13 @@ namespace Saitynai.Controllers
         [HttpGet("floor/{floorId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Point>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Point>>> GetFloorsByFloor(int floorId)
         {
             var floorExists = await _context.Floor.AnyAsync(b => b.Id == floorId);
             if (!floorExists)
             {
-                return NotFound();
+                return NotFound($"Floor with ID {floorId} not found.");
             }
 
             var points = await _context.Point
@@ -85,6 +90,7 @@ namespace Saitynai.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Point))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ProblemDetails))]
+        [PermissionAuthorize("create", "Point")]
         public async Task<ActionResult<Point>> PostPoint(Point point)
         {
             try
@@ -94,32 +100,53 @@ namespace Saitynai.Controllers
 
                 return CreatedAtAction("GetPoint", new { id = point.Id }, point);
             }
-            // 23505: unique/primary key violation (duplicate)
-            catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == PostgresErrorCodes.UniqueViolation)
+            catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == "23505")
             {
-                var pd = new ProblemDetails
-                {
-                    Status = StatusCodes.Status409Conflict,
-                    Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
-                    Title = "Conflict",
-                    Detail = "A point with the same identifier already exists."
-                };
-                pd.Extensions["constraint"] = pg.ConstraintName;
-                return Conflict(pd);
+                return Conflict(new ProblemDetails { Status = 409, Title = "Conflict", Detail = "A point with the same identifier already exists.", Extensions = { { "constraint", pg.ConstraintName } } });
             }
-            // 23503: foreign key violation (e.g., floor_id points to a missing Floor)
-            catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == PostgresErrorCodes.ForeignKeyViolation)
+            catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == "23503")
             {
-                var pd = new ProblemDetails
-                {
-                    Status = StatusCodes.Status409Conflict,
-                    Type = "https://www.rfc-editor.org/rfc/rfc9110.html#name-409-conflict",
-                    Title = "Conflict",
-                    Detail = "The referenced floor_id does not exist."
-                };
-                pd.Extensions["constraint"] = pg.ConstraintName;
-                return Conflict(pd);
+                return Conflict(new ProblemDetails { Status = 409, Title = "Conflict", Detail = "The referenced floor_id does not exist.", Extensions = { { "constraint", pg.ConstraintName } } });
             }
+        }
+        
+        /// <summary>
+        /// Update a point.
+        /// </summary>
+        /// <param name="id">Point identifier.</param>
+        /// <param name="point">Point payload.</param>
+        /// <returns>No content on success.</returns>
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [PermissionAuthorize("edit", "Point")]
+        public async Task<IActionResult> PutPoint(int id, Point point)
+        {
+            if (id != point.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(point).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PointExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         /// <summary>
@@ -130,6 +157,7 @@ namespace Saitynai.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [PermissionAuthorize("delete", "Point")]
         public async Task<IActionResult> DeletePoint(int id)
         {
             var point = await _context.Point.FindAsync(id);
