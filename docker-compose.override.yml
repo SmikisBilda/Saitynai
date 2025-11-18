@@ -1,11 +1,12 @@
 services:
   saitynai:
+    restart: unless-stopped
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - DB_PASSWORD=/run/secrets/dbpass
     ports:
-      - "8080:8080"
+      - "8090:8080"
     networks:
       - bridged
       - dbnet
@@ -13,8 +14,8 @@ services:
       - dbpass
 
   db:
+    restart: unless-stopped
     networks:
-      - bridged
       - dbnet
     volumes:
       - dbdata:/var/lib/postgresql/data
