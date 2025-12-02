@@ -41,3 +41,12 @@ public class AssignPermissionDto
     public bool Allow { get; set; } = true;
     public bool Cascade { get; set; } = true;
 }
+
+public class UserPermissionDto
+{
+    public string PermissionName { get; set; }
+    public string ResourceType { get; set; }
+    public int ResourceId { get; set; }
+    public bool Allow { get; set; }
+    public bool Cascade { get; set; }
+}

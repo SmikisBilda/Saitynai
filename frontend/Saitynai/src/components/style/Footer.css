@@ -1,0 +1,48 @@
+.footer {
+  background-color: #f8f9fa;
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #e0e0e0;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  position: relative;
+}
+
+.source-code-button {
+  background-color: #0366d6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.source-code-button:hover {
+  background-color: #0256c2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .footer {
+    padding: 15px;
+  }
+  
+  .source-code-button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 10px;
+  }
+  
+  .source-code-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}

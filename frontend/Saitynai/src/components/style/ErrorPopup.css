@@ -1,0 +1,41 @@
+.error-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.error-popup {
+  background: #fff;
+  padding: 16px 24px;
+  border-radius: 8px;
+  max-width: 90%;
+  width: 320px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.error-popup h2 {
+  margin-bottom: 8px;
+  color: #b00020;
+}
+
+.error-popup p {
+  margin-bottom: 12px;
+}
+
+.error-popup button {
+  background-color: #b00020;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.error-popup button:hover {
+  background-color: #8b0019;
+}

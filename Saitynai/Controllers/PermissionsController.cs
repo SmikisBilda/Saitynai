@@ -21,6 +21,74 @@ public class PermissionController : ControllerBase
         _context = context;
     }
 
+
+    [HttpGet("my-permissions")]
+    [Authorize]
+    public async Task<IActionResult> GetMyPermissions()
+    {
+        var userId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
+        if (userId == 0)
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+
+        var userRoles = await _context.UserRole
+            .Where(ur => ur.UserId == userId)
+            .Select(ur => ur.RoleId)
+            .ToListAsync();
+
+        if (!userRoles.Any())
+        {
+            return Ok(new List<UserPermissionDto>());
+        }
+
+        var rolePermissions = await _context.RolePermission
+            .Include(rp => rp.Permission)
+            .Include(rp => rp.ResourceType)
+            .Where(rp => userRoles.Contains(rp.RoleId))
+            .Select(rp => new UserPermissionDto
+            {
+                PermissionName = rp.Permission.Name,
+                ResourceType = rp.ResourceType.Name,
+                ResourceId = rp.ResourceId,
+                Allow = rp.Allow,
+                Cascade = rp.Cascade
+            })
+            .ToListAsync();
+
+        return Ok(rolePermissions);
+    }
+
+        // === VIEW METHODS ===
+
+        [HttpGet("roles")]
+        public async Task<IActionResult> GetRoles()
+        {
+            var roles = await _context.Role.ToListAsync();
+            return Ok(roles);
+        }
+
+        [HttpGet("permissions")]
+        public async Task<IActionResult> GetPermissions()
+        {
+            var permissions = await _context.Permission.ToListAsync();
+            return Ok(permissions);
+        }
+
+        [HttpGet("user-roles")]
+        public async Task<IActionResult> GetUserRoles()
+        {
+            var userRoles = await _context.UserRole.ToListAsync();
+            return Ok(userRoles);
+        }
+
+        [HttpGet("role-permissions")]
+        public async Task<IActionResult> GetRolePermissions()
+        {
+            var rolePermissions = await _context.RolePermission.ToListAsync();
+            return Ok(rolePermissions);
+        }
+
     [HttpPost("roles")]
     public async Task<IActionResult> CreateRole(CreateRoleDto createRoleDto)
     {
@@ -74,6 +142,7 @@ public class PermissionController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok("Role revoked successfully.");
     }
+
 
     // === Assign/Revoke Permission for Role ===
 
@@ -147,4 +216,68 @@ public class PermissionController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok("Permission revoked successfully.");
     }
+
+        // === DELETE METHODS ===
+
+        [HttpDelete("roles/{id}")]
+        public async Task<IActionResult> DeleteRole(int id)
+        {
+            var role = await _context.Role.FindAsync(id);
+            if (role == null) return NotFound("Role not found.");
+            _context.Role.Remove(role);
+            await _context.SaveChangesAsync();
+            return Ok("Role deleted successfully.");
+        }
+
+        [HttpDelete("permissions/{id}")]
+        public async Task<IActionResult> DeletePermission(int id)
+        {
+            var permission = await _context.Permission.FindAsync(id);
+            if (permission == null) return NotFound("Permission not found.");
+            _context.Permission.Remove(permission);
+            await _context.SaveChangesAsync();
+            return Ok("Permission deleted successfully.");
+        }
+
+        [HttpDelete("user-roles/{userId}/{roleId}")]
+        public async Task<IActionResult> DeleteUserRole(int userId, int roleId)
+        {
+            var userRole = await _context.UserRole.FirstOrDefaultAsync(ur => ur.UserId == userId && ur.RoleId == roleId);
+            if (userRole == null) return NotFound("UserRole not found.");
+            _context.UserRole.Remove(userRole);
+            await _context.SaveChangesAsync();
+            return Ok("UserRole deleted successfully.");
+        }
+
+        [HttpDelete("role-permissions/{roleId}/{permissionId}/{resourceType}/{resourceId}")]
+        public async Task<IActionResult> DeleteRolePermission(int roleId, int permissionId, string resourceType, int resourceId)
+        {
+            var resourceTypeEntity = await _context.ResourceType.FirstOrDefaultAsync(rt => rt.Name.ToLower() == resourceType.ToLower());
+            if (resourceTypeEntity == null) return BadRequest($"Invalid resource type: '{resourceType}'.");
+            var resourceTypeId = resourceTypeEntity.Id;
+            var rolePermission = await _context.RolePermission.FirstOrDefaultAsync(rp => rp.RoleId == roleId && rp.PermissionId == permissionId && rp.ResourceTypeId == resourceTypeId && rp.ResourceId == resourceId);
+            if (rolePermission == null) return NotFound("RolePermission not found.");
+            _context.RolePermission.Remove(rolePermission);
+            await _context.SaveChangesAsync();
+            return Ok("RolePermission deleted successfully.");
+        }
+
+            // === USER VIEW & DELETE ===
+
+            [HttpGet("users")]
+            public async Task<IActionResult> GetUsers()
+            {
+                var users = await _context.User.ToListAsync();
+                return Ok(users);
+            }
+
+            [HttpDelete("users/{id}")]
+            public async Task<IActionResult> DeleteUser(int id)
+            {
+                var user = await _context.User.FindAsync(id);
+                if (user == null) return NotFound("User not found.");
+                _context.User.Remove(user);
+                await _context.SaveChangesAsync();
+                return Ok("User deleted successfully.");
+            }
 }
