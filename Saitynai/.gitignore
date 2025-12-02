@@ -50,12 +50,6 @@ TestResult*/
 .idea/ 
 *.iml 
 
-# --- Environment / secrets (custom) ---
-secrets/ 
-*.env 
-.env* 
-*.secret 
-*.key 
 
 # --- Docker ---
 **/.dockerignore 
@@ -64,8 +58,7 @@ docker-data/
 dbdata/ 
 .docker-compose/ 
 
-# Ignore local compose overrides and generated files
-docker-compose.override.yml 
+
 
 # --- Swagger UI build artifacts (keep source spec, ignore generated) ---
 wwwroot/swagger/* 
