@@ -51,6 +51,35 @@ public class AuthController : ControllerBase
         return CreatedAtAction(nameof(Register), new { id = user.Id }, "User registered successfully");
     }
 
+    [HttpGet("me")]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        if (userIdString == null || !int.TryParse(userIdString, out int userId))
+        {
+            return Unauthorized("Invalid token");
+        }
+
+        var user = await _context.User
+            .Include(u => u.UserRoles)
+            .ThenInclude(ur => ur.Role)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        
+        if (user == null)
+        {
+            return NotFound("User not found");
+        }
+
+        return Ok(new 
+        { 
+            id = user.Id,
+            username = user.Username,
+            email = user.Email,
+            roles = user.UserRoles.Select(ur => new { id = ur.Role.Id, name = ur.Role.Name }).ToList()
+        });
+    }
+
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login(LoginDto loginDto)

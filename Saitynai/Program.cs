@@ -113,6 +113,18 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProv
 
 builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "http://localhost:5174") // Vite default ports
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 
 
 var app = builder.Build();
@@ -125,11 +137,26 @@ app.Use(async (context, next) =>
     await next();
 });
 
-app.UseStaticFiles();
-
-
 app.UseRouting();
 
+// Use CORS - must be after routing but before other middleware
+app.UseCors("AllowFrontend");
+
+app.UseStaticFiles();
+
+// Ensure uploads directory exists
+var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+}
+
+// Serve uploaded files
+app.UseStaticFiles(new Microsoft.AspNetCore.Builder.StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(uploadsPath),
+    RequestPath = "/uploads"
+});
 
 app.UseAuthentication();
 

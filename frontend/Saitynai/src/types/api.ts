@@ -59,12 +59,17 @@ export interface RefreshTokenDto {
   refreshToken: string;
 }
 
+export interface LogoutDto {
+  refreshToken: string;
+}
+
 export interface User {
   id: number;
   username: string;
   email: string;
   passwordHash?: string;
   createdAt: string;
+  roles: RoleDto[];
 }
 
 export interface Role {
@@ -80,16 +85,20 @@ export interface Permission {
 export interface UserRole {
   userId: number;
   roleId: number;
+  username?: string;
+  roleName?: string;
 }
 
 export interface RolePermission {
-  id: number;
   roleId: number;
   permissionId: number;
   resourceTypeId: number;
   resourceId: number;
   allow: boolean;
   cascade: boolean;
+  roleName?: string;
+  permissionName?: string;
+  resourceTypeName?: string;
 }
 
 export interface CreateRoleDto {
@@ -184,4 +193,29 @@ export interface UpdateScanDto {
   scannedAt?: string;
   filters?: string;
   apCount?: number;
+}
+
+export interface UserPermissionDto {
+  permissionName: string;
+  resourceType: string;
+  resourceId: number;
+  allow: boolean;
+  cascade: boolean;
+}
+
+export interface RoleDto {
+  id: number;
+  name: string;
+}
+
+export interface UserPermissionsResponseDto {
+  roles: RoleDto[];
+  permissions: UserPermissionDto[];
+}
+
+export interface PermissionScopeDto {
+  permissionName: string;
+  resourceType: string;
+  allowIds: number[];
+  cascadeFrom: Record<string, number[]>;
 }

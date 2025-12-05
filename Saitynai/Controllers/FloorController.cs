@@ -26,6 +26,69 @@ namespace Saitynai.Controllers
         }
 
         /// <summary>
+        /// Upload a floor plan image.
+        /// </summary>
+        /// <param name="id">Floor identifier.</param>
+        /// <param name="file">The image file.</param>
+        /// <returns>The updated floor with the new path.</returns>
+        [HttpPost("{id}/upload-plan")]
+        [PermissionAuthorize("edit", "Floor")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Floor))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Floor>> UploadFloorPlan(int id, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var floor = await _context.Floor.FindAsync(id);
+            if (floor == null)
+            {
+                return NotFound();
+            }
+
+            // Validate file type
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".svg" };
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(extension))
+            {
+                return BadRequest("Invalid file type. Only images are allowed.");
+            }
+
+            // Create uploads directory if it doesn't exist
+            var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "uploads", "floorplans");
+            Directory.CreateDirectory(uploadsDir);
+
+            // Generate unique filename
+            var fileName = $"floor_{id}_{Guid.NewGuid()}{extension}";
+            var filePath = Path.Combine(uploadsDir, fileName);
+
+            // Delete old file if exists
+            if (!string.IsNullOrEmpty(floor.FloorPlanPath))
+            {
+                var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), floor.FloorPlanPath.TrimStart('/'));
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+            }
+
+            // Save file
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Update floor with new path
+            floor.FloorPlanPath = $"/uploads/floorplans/{fileName}";
+            await _context.SaveChangesAsync();
+
+            return floor;
+        }
+
+        /// <summary>
         /// Get all floors.
         /// </summary>
         /// <returns>List of floors.</returns>
@@ -118,20 +181,37 @@ namespace Saitynai.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutFloor(int id, Floor floor)
         {
-            if (id != floor.Id)
+            var existingFloor = await _context.Floor.FindAsync(id);
+            if (existingFloor == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(floor).State = EntityState.Modified;
+            // Update only the properties provided in the request
+            if (floor.BuildingId != 0)
+            {
+                existingFloor.BuildingId = floor.BuildingId;
+            }
+            if (floor.FloorNumber != 0)
+            {
+                existingFloor.FloorNumber = floor.FloorNumber;
+            }
+            if (floor.FloorPlanPath != null)
+            {
+                existingFloor.FloorPlanPath = floor.FloorPlanPath;
+            }
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) when (!FloorExists(id))
+            catch (DbUpdateConcurrencyException)
             {
-                return NotFound();
+                if (!FloorExists(id))
+                {
+                    return NotFound();
+                }
+                throw;
             }
 
             return NoContent();

@@ -123,12 +123,29 @@ namespace Saitynai.Controllers
         [PermissionAuthorize("edit", "Point")]
         public async Task<IActionResult> PutPoint(int id, Point point)
         {
-            if (id != point.Id)
+            var existingPoint = await _context.Point.FindAsync(id);
+            if (existingPoint == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(point).State = EntityState.Modified;
+            // Update only the properties provided in the request
+            if (point.FloorId != 0)
+            {
+                existingPoint.FloorId = point.FloorId;
+            }
+            if (point.Latitude != 0)
+            {
+                existingPoint.Latitude = point.Latitude;
+            }
+            if (point.Longitude != 0)
+            {
+                existingPoint.Longitude = point.Longitude;
+            }
+            if (point.ApCount != 0)
+            {
+                existingPoint.ApCount = point.ApCount;
+            }
 
             try
             {
@@ -140,10 +157,7 @@ namespace Saitynai.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
             return NoContent();

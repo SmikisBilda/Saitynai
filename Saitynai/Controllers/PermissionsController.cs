@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 [ApiController]
 [Authorize]
@@ -26,26 +27,39 @@ public class PermissionController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetMyPermissions()
     {
-        var userId = int.Parse(User.FindFirst("userId")?.Value ?? "0");
-        if (userId == 0)
+        var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      
+        if (userIdString == null || !int.TryParse(userIdString, out int userId))
         {
             return Unauthorized("User ID not found in token.");
         }
 
         var userRoles = await _context.UserRole
+            .Include(ur => ur.Role)
             .Where(ur => ur.UserId == userId)
-            .Select(ur => ur.RoleId)
             .ToListAsync();
 
-        if (!userRoles.Any())
+        var roleIds = userRoles.Select(ur => ur.RoleId).ToList();
+
+        if (!roleIds.Any())
         {
-            return Ok(new List<UserPermissionDto>());
+            return Ok(new UserPermissionsResponseDto 
+            { 
+                Roles = new List<RoleDto>(),
+                Permissions = new List<UserPermissionDto>()
+            });
         }
+
+        var roles = userRoles.Select(ur => new RoleDto 
+        { 
+            Id = ur.Role.Id, 
+            Name = ur.Role.Name 
+        }).ToList();
 
         var rolePermissions = await _context.RolePermission
             .Include(rp => rp.Permission)
             .Include(rp => rp.ResourceType)
-            .Where(rp => userRoles.Contains(rp.RoleId))
+            .Where(rp => roleIds.Contains(rp.RoleId))
             .Select(rp => new UserPermissionDto
             {
                 PermissionName = rp.Permission.Name,
@@ -56,7 +70,116 @@ public class PermissionController : ControllerBase
             })
             .ToListAsync();
 
-        return Ok(rolePermissions);
+        return Ok(new UserPermissionsResponseDto 
+        { 
+            Roles = roles,
+            Permissions = rolePermissions
+        });
+    }
+
+    [HttpGet("my-scopes")]
+    [Authorize]
+    public async Task<IActionResult> GetMyPermissionScopes()
+    {
+        var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userIdString == null || !int.TryParse(userIdString, out int userId))
+        {
+            return Unauthorized("User ID not found in token.");
+        }
+
+        var roleIds = await _context.UserRole
+            .Where(ur => ur.UserId == userId)
+            .Select(ur => ur.RoleId)
+            .ToListAsync();
+
+        if (!roleIds.Any())
+        {
+            return Ok(new List<PermissionScopeDto>());
+        }
+
+        var rolePermissions = await _context.RolePermission
+            .Include(rp => rp.Permission)
+            .Include(rp => rp.ResourceType)
+            .Where(rp => roleIds.Contains(rp.RoleId))
+            .ToListAsync();
+
+        // Define resource hierarchy
+        var hierarchy = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "Building", null },
+            { "Floor", "Building" },
+            { "Point", "Floor" },
+            { "Scan", "Point" },
+            { "AccessPoint", "Scan" }
+        };
+
+        // Build all ancestor chains for each resource type
+        Dictionary<string, List<string>> ancestors = new(StringComparer.OrdinalIgnoreCase);
+        foreach (var rt in hierarchy.Keys)
+        {
+            var list = new List<string>();
+            var current = hierarchy[rt];
+            while (!string.IsNullOrEmpty(current))
+            {
+                list.Add(current!);
+                current = hierarchy[current!];
+            }
+            ancestors[rt] = list; // from immediate parent up to root
+        }
+
+        var permissionNames = rolePermissions
+            .Select(rp => rp.Permission.Name)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var results = new List<PermissionScopeDto>();
+
+        foreach (var permissionName in permissionNames)
+        {
+            foreach (var resourceType in hierarchy.Keys)
+            {
+                var scope = new PermissionScopeDto
+                {
+                    PermissionName = permissionName,
+                    ResourceType = resourceType
+                };
+
+                // Direct allows for the target type
+                scope.AllowIds = rolePermissions
+                    .Where(rp => rp.Permission.Name.Equals(permissionName, StringComparison.OrdinalIgnoreCase)
+                                 && rp.ResourceType.Name.Equals(resourceType, StringComparison.OrdinalIgnoreCase)
+                                 && rp.Allow)
+                    .Select(rp => rp.ResourceId)
+                    .Distinct()
+                    .ToList();
+
+                // Cascading allows from ancestors
+                foreach (var ancestorType in ancestors[resourceType])
+                {
+                    var cascadeIds = rolePermissions
+                        .Where(rp => rp.Permission.Name.Equals(permissionName, StringComparison.OrdinalIgnoreCase)
+                                     && rp.ResourceType.Name.Equals(ancestorType, StringComparison.OrdinalIgnoreCase)
+                                     && rp.Cascade
+                                     && rp.Allow)
+                        .Select(rp => rp.ResourceId)
+                        .Distinct()
+                        .ToList();
+
+                    if (cascadeIds.Any())
+                    {
+                        scope.CascadeFrom[ancestorType] = cascadeIds;
+                    }
+                }
+
+                // Only return scopes that have any data
+                if (scope.AllowIds.Count > 0 || scope.CascadeFrom.Count > 0)
+                {
+                    results.Add(scope);
+                }
+            }
+        }
+
+        return Ok(results);
     }
 
         // === VIEW METHODS ===
@@ -78,14 +201,38 @@ public class PermissionController : ControllerBase
         [HttpGet("user-roles")]
         public async Task<IActionResult> GetUserRoles()
         {
-            var userRoles = await _context.UserRole.ToListAsync();
+            var userRoles = await _context.UserRole
+                .Select(ur => new UserRoleResponseDto
+                {
+                    UserId = ur.UserId,
+                    RoleId = ur.RoleId,
+                    Username = ur.User.Username,
+                    RoleName = ur.Role.Name
+                })
+                .ToListAsync();
             return Ok(userRoles);
         }
 
         [HttpGet("role-permissions")]
         public async Task<IActionResult> GetRolePermissions()
         {
-            var rolePermissions = await _context.RolePermission.ToListAsync();
+            var rolePermissions = await _context.RolePermission
+                .Include(rp => rp.Role)
+                .Include(rp => rp.Permission)
+                .Include(rp => rp.ResourceType)
+                .Select(rp => new RolePermissionResponseDto
+                {
+                    RoleId = rp.RoleId,
+                    PermissionId = rp.PermissionId,
+                    ResourceTypeId = rp.ResourceTypeId,
+                    ResourceId = rp.ResourceId,
+                    Allow = rp.Allow,
+                    Cascade = rp.Cascade,
+                    RoleName = rp.Role.Name,
+                    PermissionName = rp.Permission.Name,
+                    ResourceTypeName = rp.ResourceType.Name
+                })
+                .ToListAsync();
             return Ok(rolePermissions);
         }
 
@@ -267,7 +414,14 @@ public class PermissionController : ControllerBase
             [HttpGet("users")]
             public async Task<IActionResult> GetUsers()
             {
-                var users = await _context.User.ToListAsync();
+                var users = await _context.User
+                    .Select(u => new UserResponseDto
+                    {
+                        Id = u.Id,
+                        Username = u.Username,
+                        Email = u.Email
+                    })
+                    .ToListAsync();
                 return Ok(users);
             }
 

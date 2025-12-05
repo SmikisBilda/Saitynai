@@ -143,12 +143,45 @@ namespace Saitynai.Controllers
         [PermissionAuthorize("edit", "AccessPoint")]
         public async Task<IActionResult> PutAccessPoint(int id, AccessPoint accessPoint)
         {
-            if (id != accessPoint.Id)
+            var existingAccessPoint = await _context.AccessPoint.FindAsync(id);
+            if (existingAccessPoint == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(accessPoint).State = EntityState.Modified;
+            // Update only the properties provided in the request
+            if (accessPoint.ScanId != 0)
+            {
+                existingAccessPoint.ScanId = accessPoint.ScanId;
+            }
+            if (accessPoint.Ssid != null)
+            {
+                existingAccessPoint.Ssid = accessPoint.Ssid;
+            }
+            if (accessPoint.Bssid != null)
+            {
+                existingAccessPoint.Bssid = accessPoint.Bssid;
+            }
+            if (accessPoint.Capabilities != null)
+            {
+                existingAccessPoint.Capabilities = accessPoint.Capabilities;
+            }
+            if (accessPoint.Centerfreq0 != null)
+            {
+                existingAccessPoint.Centerfreq0 = accessPoint.Centerfreq0;
+            }
+            if (accessPoint.Centerfreq1 != null)
+            {
+                existingAccessPoint.Centerfreq1 = accessPoint.Centerfreq1;
+            }
+            if (accessPoint.Frequency != null)
+            {
+                existingAccessPoint.Frequency = accessPoint.Frequency;
+            }
+            if (accessPoint.Level != 0)
+            {
+                existingAccessPoint.Level = accessPoint.Level;
+            }
 
             try
             {
@@ -160,14 +193,12 @@ namespace Saitynai.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
             return NoContent();
         }
+        
 
         /// <summary>
         /// Delete an access point by id.

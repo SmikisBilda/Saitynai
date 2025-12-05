@@ -124,12 +124,29 @@ namespace Saitynai.Controllers
         [PermissionAuthorize("edit", "Scan")]
         public async Task<IActionResult> PutScan(int id, Scan scan)
         {
-            if (id != scan.Id)
+            var existingScan = await _context.Scan.FindAsync(id);
+            if (existingScan == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(scan).State = EntityState.Modified;
+            // Update only the properties provided in the request
+            if (scan.PointId != 0)
+            {
+                existingScan.PointId = scan.PointId;
+            }
+            if (scan.ScannedAt != default(DateTime))
+            {
+                existingScan.ScannedAt = scan.ScannedAt;
+            }
+            if (scan.Filters != null)
+            {
+                existingScan.Filters = scan.Filters;
+            }
+            if (scan.ApCount != 0)
+            {
+                existingScan.ApCount = scan.ApCount;
+            }
 
             try
             {
@@ -141,14 +158,12 @@ namespace Saitynai.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
             return NoContent();
         }
+
 
         /// <summary>
         /// Delete a scan by id.

@@ -314,20 +314,33 @@ namespace Saitynai.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutBuilding(int id, Building building)
         {
-            if (id != building.Id)
+            var existingBuilding = await _context.Building.FindAsync(id);
+            if (existingBuilding == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(building).State = EntityState.Modified;
+            // Update only the properties provided in the request
+            if (building.Name != null)
+            {
+                existingBuilding.Name = building.Name;
+            }
+            if (building.Address != null)
+            {
+                existingBuilding.Address = building.Address;
+            }
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) when (!BuildingExists(id))
+            catch (DbUpdateConcurrencyException)
             {
-                return NotFound();
+                if (!BuildingExists(id))
+                {
+                    return NotFound();
+                }
+                throw;
             }
 
             return NoContent();

@@ -1,5 +1,5 @@
 import { apiClient } from './api';
-import type { Role, Permission, UserRole, RolePermission, User, CreateRoleDto, CreatePermissionDto, AssignRoleDto, AssignPermissionDto } from '../types/api';
+import type { Role, Permission, UserRole, RolePermission, User, CreateRoleDto, CreatePermissionDto, AssignRoleDto, AssignPermissionDto, PermissionScopeDto, UserPermissionsResponseDto } from '../types/api';
 import type { AxiosResponse } from 'axios';
 
 // Role
@@ -26,3 +26,7 @@ export const deleteRolePermission = (roleId: number, permissionId: number, resou
 // User
 export const getUsers = (): Promise<AxiosResponse<User[]>> => apiClient.get('/permission/users');
 export const deleteUser = (id: number): Promise<AxiosResponse<void>> => apiClient.delete(`/permission/users/${id}`);
+
+// My Permissions
+export const getMyPermissions = (): Promise<AxiosResponse<UserPermissionsResponseDto>> => apiClient.get('/permission/my-permissions');
+export const getMyPermissionScopes = (): Promise<AxiosResponse<PermissionScopeDto[]>> => apiClient.get('/permission/my-scopes');
