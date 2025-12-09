@@ -27,6 +27,15 @@ services:
     secrets:
       - dbpass
 
+  frontend:
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    networks:
+      - bridged
+    depends_on:
+      - saitynai
+
 networks:
   bridged:
     internal: false

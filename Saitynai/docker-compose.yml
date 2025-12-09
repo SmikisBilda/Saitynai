@@ -9,4 +9,9 @@ services:
     build:
       context: .
       dockerfile: ./DockerfileDB
+  frontend:
+    image: saitynai-frontend:v1
+    build:
+      context: ../frontend/Saitynai
+      dockerfile: ./Dockerfile
 

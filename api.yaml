@@ -1,0 +1,1593 @@
+openapi: 3.0.1
+info:
+  title: AccesPointsSaitynai API
+  description: OpenAPI specification for the AccesPointsSaitynai service
+  version: v1
+paths:
+  /api/AccessPoints:
+    get:
+      tags:
+        - AccessPoints
+      summary: Get all access points. This endpoint is public.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessPoint'
+    post:
+      tags:
+        - AccessPoints
+      summary: Create a new access point.
+      requestBody:
+        description: Access point payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessPointCreateDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AccessPointCreateDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AccessPointCreateDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessPoint'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/AccessPoints/{id}':
+    get:
+      tags:
+        - AccessPoints
+      summary: Get an access point by id. This endpoint is public.
+      parameters:
+        - name: id
+          in: path
+          description: Access point identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessPoint'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - AccessPoints
+      summary: Update an access point.
+      parameters:
+        - name: id
+          in: path
+          description: Access point identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: Access point payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessPoint'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AccessPoint'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AccessPoint'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - AccessPoints
+      summary: Delete an access point by id.
+      parameters:
+        - name: id
+          in: path
+          description: Access point identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/AccessPoints/scan/{scanId}':
+    get:
+      tags:
+        - AccessPoints
+      summary: Get all access points for a scan. This endpoint is public.
+      parameters:
+        - name: scanId
+          in: path
+          description: Scan identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessPoint'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/Auth/register:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+      responses:
+        '200':
+          description: OK
+  /api/Auth/me:
+    get:
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: OK
+  /api/Auth/login:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: OK
+  /api/Auth/refresh:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequestDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequestDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequestDto'
+      responses:
+        '200':
+          description: OK
+  /api/Auth/logout:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequestDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequestDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequestDto'
+      responses:
+        '200':
+          description: OK
+  /api/Building:
+    get:
+      tags:
+        - Building
+      summary: Get all buildings.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Building'
+    post:
+      tags:
+        - Building
+      summary: Create a building.
+      requestBody:
+        description: Building payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Building'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Building/{id}':
+    get:
+      tags:
+        - Building
+      summary: Get a building by id.
+      parameters:
+        - name: id
+          in: path
+          description: Building identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Building
+      summary: Update a building by id.
+      parameters:
+        - name: id
+          in: path
+          description: Building identifier from URL.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: Updated building payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Building'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Building
+      summary: Delete a building by id.
+      parameters:
+        - name: id
+          in: path
+          description: Building identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Building/{buildingId}/floors/{floorId}/points/{pointId}':
+    get:
+      tags:
+        - Building
+      summary: Get a single point under a specific floor and building.
+      parameters:
+        - name: buildingId
+          in: path
+          description: Building identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: floorId
+          in: path
+          description: Floor identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: pointId
+          in: path
+          description: Point identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Point'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Building/{buildingId}/floors/{floorId}/points/{pointId}/scans/{scanId}/accesspoints/{accessPointId}':
+    get:
+      tags:
+        - Building
+      summary: >-
+        Get a single AccessPoint under specific scan, point, floor, and
+        building.
+      parameters:
+        - name: buildingId
+          in: path
+          description: Building identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: floorId
+          in: path
+          description: Floor identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: pointId
+          in: path
+          description: Point identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: scanId
+          in: path
+          description: Scan identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: accessPointId
+          in: path
+          description: AccessPoint identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessPoint'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Building/{buildingId}/floors/{floorId}/points/{pointId}/scans/{scanId}':
+    get:
+      tags:
+        - Building
+      summary: 'Get a single scan under a specific point, floor, and building.'
+      parameters:
+        - name: buildingId
+          in: path
+          description: Building identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: floorId
+          in: path
+          description: Floor identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: pointId
+          in: path
+          description: Point identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: scanId
+          in: path
+          description: Scan identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Scan'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Floor/{id}/upload-plan':
+    post:
+      tags:
+        - Floor
+      summary: Upload a floor plan image.
+      parameters:
+        - name: id
+          in: path
+          description: Floor identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+            encoding:
+              file:
+                style: form
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Floor'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/Floor:
+    get:
+      tags:
+        - Floor
+      summary: Get all floors.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Floor'
+    post:
+      tags:
+        - Floor
+      summary: Create a floor.
+      requestBody:
+        description: Floor payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Floor'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Floor'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Floor'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Floor'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Floor/{id}':
+    get:
+      tags:
+        - Floor
+      summary: Get a floor by id.
+      parameters:
+        - name: id
+          in: path
+          description: Floor identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Floor'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Floor
+      summary: Update a floor by id.
+      parameters:
+        - name: id
+          in: path
+          description: Floor identifier from URL.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: Updated floor payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Floor'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Floor'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Floor'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Floor
+      summary: Delete a floor by id.
+      parameters:
+        - name: id
+          in: path
+          description: Floor identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Floor/building/{buildingId}':
+    get:
+      tags:
+        - Floor
+      summary: Get all floors for a building.
+      parameters:
+        - name: buildingId
+          in: path
+          description: Building identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Floor'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/Permission/my-permissions:
+    get:
+      tags:
+        - Permission
+      responses:
+        '200':
+          description: OK
+  /api/Permission/my-scopes:
+    get:
+      tags:
+        - Permission
+      responses:
+        '200':
+          description: OK
+  /api/Permission/roles:
+    get:
+      tags:
+        - Permission
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Permission
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoleDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoleDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateRoleDto'
+      responses:
+        '200':
+          description: OK
+  /api/Permission/permissions:
+    get:
+      tags:
+        - Permission
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Permission
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePermissionDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreatePermissionDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreatePermissionDto'
+      responses:
+        '200':
+          description: OK
+  /api/Permission/user-roles:
+    get:
+      tags:
+        - Permission
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Permission
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignRoleDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AssignRoleDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AssignRoleDto'
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - Permission
+      parameters:
+        - name: UserId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: RoleId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/Permission/role-permissions:
+    get:
+      tags:
+        - Permission
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Permission
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignPermissionDto'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/AssignPermissionDto'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/AssignPermissionDto'
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - Permission
+      parameters:
+        - name: RoleId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: PermissionId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: ResourceType
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: ResourceId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: Allow
+          in: query
+          schema:
+            type: boolean
+        - name: Cascade
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+  '/api/Permission/roles/{id}':
+    delete:
+      tags:
+        - Permission
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  '/api/Permission/permissions/{id}':
+    delete:
+      tags:
+        - Permission
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  '/api/Permission/user-roles/{userId}/{roleId}':
+    delete:
+      tags:
+        - Permission
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  '/api/Permission/role-permissions/{roleId}/{permissionId}/{resourceType}/{resourceId}':
+    delete:
+      tags:
+        - Permission
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: resourceType
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: resourceId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/Permission/users:
+    get:
+      tags:
+        - Permission
+      responses:
+        '200':
+          description: OK
+  '/api/Permission/users/{id}':
+    delete:
+      tags:
+        - Permission
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/Point:
+    get:
+      tags:
+        - Point
+      summary: Get all points. Requires a global 'view' permission on 'Point'.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Point'
+    post:
+      tags:
+        - Point
+      summary: Create a point.
+      requestBody:
+        description: Point payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Point'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Point'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Point'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Point'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Point/{id}':
+    get:
+      tags:
+        - Point
+      summary: Get a point by id.
+      parameters:
+        - name: id
+          in: path
+          description: Point identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Point'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Point
+      summary: Update a point.
+      parameters:
+        - name: id
+          in: path
+          description: Point identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: Point payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Point'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Point'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Point'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Point
+      summary: Delete a point by id.
+      parameters:
+        - name: id
+          in: path
+          description: Point identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Point/floor/{floorId}':
+    get:
+      tags:
+        - Point
+      summary: Get all points for a floor.
+      parameters:
+        - name: floorId
+          in: path
+          description: Floor identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Point'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/Scan:
+    get:
+      tags:
+        - Scan
+      summary: Get all scans. This endpoint is public.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Scan'
+    post:
+      tags:
+        - Scan
+      summary: Create a scan.
+      requestBody:
+        description: Scan payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Scan'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Scan'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Scan'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Scan'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Scan/{id}':
+    get:
+      tags:
+        - Scan
+      summary: Get a scan by id. This endpoint is public.
+      parameters:
+        - name: id
+          in: path
+          description: Scan identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Scan'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+        - Scan
+      summary: Update a scan.
+      parameters:
+        - name: id
+          in: path
+          description: Scan identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: Scan payload.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Scan'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Scan'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Scan'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+        - Scan
+      summary: Delete a scan by id.
+      parameters:
+        - name: id
+          in: path
+          description: Scan identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/api/Scan/point/{pointId}':
+    get:
+      tags:
+        - Scan
+      summary: Get all scans for a point. This endpoint is public.
+      parameters:
+        - name: pointId
+          in: path
+          description: Point identifier.
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Scan'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    AccessPoint:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        scanId:
+          type: integer
+          format: int32
+        ssid:
+          type: string
+          nullable: true
+        bssid:
+          type: string
+          nullable: true
+        capabilities:
+          type: string
+          nullable: true
+        centerfreq0:
+          type: integer
+          format: int32
+          nullable: true
+        centerfreq1:
+          type: integer
+          format: int32
+          nullable: true
+        frequency:
+          type: integer
+          format: int32
+          nullable: true
+        level:
+          type: integer
+          format: int32
+      additionalProperties: false
+    AccessPointCreateDto:
+      type: object
+      properties:
+        scanId:
+          type: integer
+          format: int32
+        ssid:
+          type: string
+          nullable: true
+        bssid:
+          type: string
+          nullable: true
+        capabilities:
+          type: string
+          nullable: true
+        centerfreq0:
+          type: integer
+          format: int32
+          nullable: true
+        centerfreq1:
+          type: integer
+          format: int32
+          nullable: true
+        frequency:
+          type: integer
+          format: int32
+          nullable: true
+        level:
+          type: integer
+          format: int32
+      additionalProperties: false
+    AssignPermissionDto:
+      required:
+        - permissionId
+        - resourceId
+        - resourceType
+        - roleId
+      type: object
+      properties:
+        roleId:
+          type: integer
+          format: int32
+        permissionId:
+          type: integer
+          format: int32
+        resourceType:
+          minLength: 1
+          type: string
+        resourceId:
+          type: integer
+          format: int32
+        allow:
+          type: boolean
+        cascade:
+          type: boolean
+      additionalProperties: false
+    AssignRoleDto:
+      required:
+        - roleId
+        - userId
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+        roleId:
+          type: integer
+          format: int32
+      additionalProperties: false
+    Building:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        address:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CreatePermissionDto:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    CreateRoleDto:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Floor:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        buildingId:
+          type: integer
+          format: int32
+        floorNumber:
+          type: integer
+          format: int32
+        floorPlanPath:
+          type: string
+          nullable: true
+      additionalProperties: false
+    LoginDto:
+      required:
+        - password
+        - username
+      type: object
+      properties:
+        username:
+          minLength: 1
+          type: string
+        password:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    LogoutRequestDto:
+      required:
+        - refreshToken
+      type: object
+      properties:
+        refreshToken:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Point:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        floorId:
+          type: integer
+          format: int32
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        apCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: {}
+    RefreshTokenRequestDto:
+      required:
+        - refreshToken
+      type: object
+      properties:
+        refreshToken:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    RegisterDto:
+      required:
+        - email
+        - password
+        - username
+      type: object
+      properties:
+        username:
+          minLength: 1
+          type: string
+        email:
+          minLength: 1
+          type: string
+          format: email
+        password:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Scan:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        pointId:
+          type: integer
+          format: int32
+        scannedAt:
+          type: string
+          format: date-time
+        filters:
+          type: string
+          nullable: true
+        apCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      description: "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\""
+      name: Authorization
+      in: header
+security:
+  - Bearer: []
