@@ -46,6 +46,25 @@
   margin: 5px 0;
   transition: 0.3s;
   display: block;
+  position: relative;
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 2px;
+  background-color: #61dafb;
+  transition: 0.3s;
+}
+
+.hamburger::before {
+  top: -8px;
+}
+
+.hamburger::after {
+  top: 8px;
 }
 
 .menu-toggle:hover .hamburger {

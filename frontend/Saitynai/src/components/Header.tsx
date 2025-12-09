@@ -35,30 +35,26 @@ const Header = () => {
         </button>
 
         <nav className={`header-nav ${menuOpen ? 'open' : ''}`}>
-          {isAuthenticated && (
+          <button 
+            className="nav-item"
+            onClick={() => handleNavigation('/buildings')}
+          >
+            Buildings
+          </button>
+          {isAuthenticated && isAdmin && (
             <>
               <button 
                 className="nav-item"
-                onClick={() => handleNavigation('/')}
+                onClick={() => handleNavigation('/permissions')}
               >
-                Buildings
+                Permissions
               </button>
-              {isAdmin && (
-                <>
-                  <button 
-                    className="nav-item"
-                    onClick={() => handleNavigation('/permissions')}
-                  >
-                    Permissions
-                  </button>
-                  <button 
-                    className="nav-item"
-                    onClick={() => handleNavigation('/register-user')}
-                  >
-                    Register User
-                  </button>
-                </>
-              )}
+              <button 
+                className="nav-item"
+                onClick={() => handleNavigation('/register-user')}
+              >
+                Register User
+              </button>
             </>
           )}
 

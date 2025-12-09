@@ -113,9 +113,9 @@ export function GenericTable<T>({
                 return (
                   <tr key={itemId}>
                     {columns.map((column, colIndex) => (
-                      <td key={colIndex}>{getCellValue(item, column)}</td>
+                      <td key={colIndex} data-label={column.label}>{getCellValue(item, column)}</td>
                     ))}
-                    <td className="actions-cell">
+                    <td className="actions-cell" data-label="Actions">
                       <div className="action-buttons">
                         <button
                           className="action-button view-button"

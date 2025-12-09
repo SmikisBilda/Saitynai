@@ -22,8 +22,8 @@ CREATE INDEX IF NOT EXISTS idx_floor_building_id ON saitynai.floor(building_id);
 CREATE TABLE IF NOT EXISTS saitynai.point (
   id serial4 PRIMARY KEY,
   floor_id int4 NOT NULL,
-  latitude numeric(9, 6) NOT NULL,
-  longitude numeric(9, 6) NOT NULL,
+  latitude numeric(10, 2) NOT NULL,
+  longitude numeric(10, 2) NOT NULL,
   ap_count int4 NOT NULL DEFAULT 0,
   CONSTRAINT point_floor_id_fkey
     FOREIGN KEY (floor_id)

@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import BuildingsPage from './pages/BuildingsPage';
 import FloorsPage from './pages/FloorsPage';
 import PointsPage from './pages/PointsPage';
+import FloorMapPage from './pages/FloorMapPage';
 import ScansPage from './pages/ScansPage';
 import AccessPointsPage from './pages/AccessPointsPage';
 import RegisterUserPage from './pages/RegisterUserPage';
@@ -25,7 +26,7 @@ function App() {
 
   return (
     <div className="app-container">
-      {isAuthenticated && <Header />}
+      <Header />
       <main className="main-content">
         <Routes>
           <Route 
@@ -37,15 +38,13 @@ function App() {
           
           <Route 
             path="/" 
-            element={
-              isAuthenticated ? <Navigate to="/buildings" replace /> : <Navigate to="/login" replace />
-            } 
+            element={<Navigate to="/buildings" replace />} 
           />
 
           <Route
             path="/buildings"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest>
                 <BuildingsPage />
               </ProtectedRoute>
             }
@@ -54,7 +53,7 @@ function App() {
           <Route
             path="/buildings/:buildingId/floors"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest>
                 <FloorsPage />
               </ProtectedRoute>
             }
@@ -63,8 +62,17 @@ function App() {
           <Route
             path="/floors/:floorId/points"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest>
                 <PointsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/floors/:floorId/map"
+            element={
+              <ProtectedRoute allowGuest>
+                <FloorMapPage />
               </ProtectedRoute>
             }
           />
@@ -72,7 +80,7 @@ function App() {
           <Route
             path="/points/:pointId/scans"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest>
                 <ScansPage />
               </ProtectedRoute>
             }
@@ -81,7 +89,7 @@ function App() {
           <Route
             path="/scans/:scanId/access-points"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowGuest>
                 <AccessPointsPage />
               </ProtectedRoute>
             }
@@ -133,7 +141,7 @@ function App() {
           />
         </Routes>
       </main>
-      {isAuthenticated && <Footer />}
+      <Footer />
     </div>
   );
 }

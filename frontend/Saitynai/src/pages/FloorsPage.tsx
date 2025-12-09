@@ -101,13 +101,43 @@ const FloorsPage = () => {
     { key: 'id', label: 'ID' },
     { key: 'buildingId', label: 'Building ID' },
     { key: 'floorNumber', label: 'Floor Number' },
-    { key: 'floorPlanPath', label: 'Floor Plan' },
+    {
+      key: 'floorPlanPath',
+      label: 'Floor Plan',
+      render: (floor: Floor) => {
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8090';
+        if (!floor.floorPlanPath) {
+          return (
+            <span style={{ color: '#999', fontSize: '0.9rem' }}>No plan</span>
+          );
+        }
+        return (
+          <img
+            src={`${apiBaseUrl}${floor.floorPlanPath}`}
+            alt={`Floor ${floor.floorNumber} plan`}
+            style={{
+              maxWidth: '80px',
+              maxHeight: '60px',
+              borderRadius: '4px',
+              border: '1px solid #ddd',
+              objectFit: 'cover',
+              cursor: 'pointer',
+            }}
+            title="Click to view full plan"
+          />
+        );
+      },
+    },
   ];
 
   const childRoutes = [
     {
       label: 'View Points',
       path: (floor: Floor) => `/floors/${floor.id}/points`,
+    },
+    {
+      label: 'View Map',
+      path: (floor: Floor) => `/floors/${floor.id}/map`,
     },
   ];
 

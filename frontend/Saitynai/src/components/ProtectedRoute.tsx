@@ -7,6 +7,7 @@ interface ProtectedRouteProps {
   requireRole?: string;
   resourceType?: string;
   resourceId?: number;
+  allowGuest?: boolean;
 }
 
 export function ProtectedRoute({ 
@@ -14,7 +15,8 @@ export function ProtectedRoute({
   requirePermission,
   requireRole,
   resourceType,
-  resourceId 
+  resourceId,
+  allowGuest = false
 }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading, hasPermission, roles } = useAuth();
 
@@ -23,6 +25,9 @@ export function ProtectedRoute({
   }
 
   if (!isAuthenticated) {
+    if (allowGuest) {
+      return <>{children}</>;
+    }
     return <Navigate to="/login" replace />;
   }
 

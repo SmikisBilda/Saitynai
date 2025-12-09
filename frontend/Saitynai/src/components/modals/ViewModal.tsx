@@ -44,7 +44,6 @@ export function ViewModal<T>({ item, onClose, columns }: ViewModalProps<T>) {
                     <img
                       src={src}
                       alt={key}
-                      style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '4px' }}
                     />
                   ) : (
                     value === null || value === undefined

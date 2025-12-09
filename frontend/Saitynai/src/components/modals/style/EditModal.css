@@ -2,6 +2,17 @@
   max-width: 700px;
 }
 
+.edit-modal form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.edit-modal .modal-body {
+  overflow-y: auto;
+}
+
 .error-message {
   display: flex;
   align-items: center;
@@ -33,16 +44,63 @@
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-label {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
   font-weight: 600;
-  color: #555;
-  margin-bottom: 0.5rem;
+  color: #333;
+  margin-bottom: 0.65rem;
   text-transform: capitalize;
   font-size: 0.95rem;
+}
+
+.form-label.required::after {
+  content: '*';
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.form-help-text {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.35rem;
+  font-style: italic;
+}
+
+.form-input.success {
+  border-color: #22c55e;
+  background-color: #f0fdf4;
+}
+
+.form-input.error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.form-validation-message {
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.form-validation-message.success {
+  color: #166534;
+  background-color: #dcfce7;
+}
+
+.form-validation-message.error {
+  color: #991b1b;
+  background-color: #fee2e2;
 }
 
 .form-input {
@@ -77,23 +135,44 @@ select.form-input {
   cursor: pointer;
 }
 
+.modal-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
 .modal-footer {
   display: flex;
   gap: 0.75rem;
   justify-content: flex-end;
+  flex-shrink: 0;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e0e0e0;
 }
 
 .cancel-button {
-  background: #6c757d;
+  background: #6c757d !important;
+  color: white !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .cancel-button:hover {
-  background: #5a6268;
+  background: #5a6268 !important;
   box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
 }
 
 .save-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .save-button:hover {
