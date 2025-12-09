@@ -64,5 +64,21 @@ Programa turėtu būti pasiekiama per:
 ```
 http://localhost:8080/swagger
 ```
+## 3.	Naudotojo sąsajos projektas
+
+
+
+
+
+
+
+
+## 4.	OpenAPI specifikacija
+https://github.com/SmikisBilda/Saitynai/blob/main/api.yaml
+## 5.	Projekto išvados
+1.	Įgyta patirtis kuriant pilnos apimties saityno projektus, apimančius serverio ir kliento dalies logiką.
+2.	Išmokta kurti standartus atitinkančius API metodus ir ruošti išsamią techninę dokumentaciją.
+3.	Įsisavinti JWT autentifikacijos principai ir jų taikymo metodai.
+4.	Įgyti praktiniai gebėjimai diegti projektus į viešą tinklą naudojant „AWS“.
 
 
