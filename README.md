@@ -66,6 +66,12 @@ http://localhost:8080/swagger
 ```
 ## 3.	Naudotojo sąsajos projektas
 
+<img width="845" height="738" alt="image" src="https://github.com/user-attachments/assets/d3380cd9-bd01-4d56-886e-587bd077c6d4" />
+<img width="687" height="533" alt="image" src="https://github.com/user-attachments/assets/ee9f0ebb-b423-44fd-97f0-a87cb3addfda" />
+<img width="845" height="727" alt="image" src="https://github.com/user-attachments/assets/5a4f9be5-eaf8-4c49-9f64-28c391bbb3ea" />
+<img width="1022" height="638" alt="image" src="https://github.com/user-attachments/assets/53ae1b81-a3ad-411e-ba67-0a80d07b966f" />
+<img width="843" height="745" alt="image" src="https://github.com/user-attachments/assets/28f62b77-f881-4da2-968f-6c66e7adef1a" />
+<img width="679" height="648" alt="image" src="https://github.com/user-attachments/assets/e42f75ab-054d-4272-9ee8-7c36274bb74b" />
 
 
 
